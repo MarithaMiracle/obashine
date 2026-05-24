@@ -22,7 +22,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey)
 const mediaBase = "https://brxpjwtisajinfhbqchs.supabase.co/storage/v1/object/public/main/media"
 
 // Helper function to generate random data
-const randomElement = <T>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
+const randomElement = <T>(arr: readonly T[]) => arr[Math.floor(Math.random() * arr.length)];
 const randomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 // Sample data arrays

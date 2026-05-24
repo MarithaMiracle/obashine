@@ -460,7 +460,7 @@ export default function PropertyDetailsPage() {
         }} />
         <div style={{ position: "relative", zIndex: 3, width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
           <div style={{ width: "100%", maxWidth: 900, position: "relative" }}>
-            <SearchAndFilter page="/buy" />
+            <SearchAndFilter page="buy" />
           </div>
         </div>
       </section>

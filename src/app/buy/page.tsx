@@ -1,6 +1,7 @@
 import SearchAndFilter from '@/components/SearchAndFilter'
 import Image from 'next/image'
 import PropertyList from '@/components/PropertyList'
+import { Suspense } from 'react'
 
 const mediaBase = "https://brxpjwtisajinfhbqchs.supabase.co/storage/v1/object/public/main/media"
 
@@ -88,7 +89,9 @@ export default async function BuyPage() {
         }}>
           Properties Available for Buy
         </h2>
-        <PropertyList type="sale" />
+        <Suspense fallback={<div style={{ textAlign: 'center', padding: '40px', color: '#8A8B8E', fontFamily: "'Poppins', sans-serif" }}>Loading properties...</div>}>
+          <PropertyList type="sale" />
+        </Suspense>
       </section>
 
       {/* Why Buy With Us Section */}

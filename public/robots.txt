@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.obashineproperties.com
+
+# Sitemaps
+Sitemap: https://www.obashineproperties.com/sitemap.xml

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import SearchAndFilter from '@/components/SearchAndFilter';
 import Image from 'next/image';
 import PropertyList from '@/components/PropertyList';
@@ -137,7 +137,9 @@ export default function RentPage() {
           Properties Available for Rent
         </h2>
 
-        <PropertyList type="rent" />
+        <Suspense fallback={<div style={{ textAlign: 'center', padding: '40px', color: '#8A8B8E', fontFamily: "'Poppins', sans-serif" }}>Loading properties...</div>}>
+          <PropertyList type="rent" />
+        </Suspense>
       </section>
 
       {/* Why Rent With Us Section */}
