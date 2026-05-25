@@ -20,6 +20,14 @@ export default function AdminAnalytics() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [timeGranularity, setTimeGranularity] = useState<'month' | 'week' | 'day'>('month');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     fetchAnalytics();
@@ -78,10 +86,10 @@ export default function AdminAnalytics() {
   return (
     <div>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
+      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', marginBottom: '32px', gap: '16px' }}>
         <h1 
           style={{
-            fontSize: '32px',
+            fontSize: isMobile ? '24px' : '32px',
             fontWeight: 600,
             color: '#5D5D5E',
             fontFamily: "'Poppins', sans-serif",
@@ -90,13 +98,14 @@ export default function AdminAnalytics() {
         >
           ANALYTICS
         </h1>
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center', width: isMobile ? '100%' : 'auto' }}>
           {/* Date Range Filters */}
           <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             style={{
+              flex: isMobile ? '1 1 calc(50% - 18px)' : 'none',
               padding: '10px 16px',
               borderRadius: '10px',
               border: 'none',
@@ -112,6 +121,7 @@ export default function AdminAnalytics() {
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             style={{
+              flex: isMobile ? '1 1 calc(50% - 18px)' : 'none',
               padding: '10px 16px',
               borderRadius: '10px',
               border: 'none',
@@ -126,6 +136,7 @@ export default function AdminAnalytics() {
             value={timeGranularity}
             onChange={(e) => setTimeGranularity(e.target.value as any)}
             style={{
+              flex: isMobile ? '1 1 100%' : 'none',
               padding: '10px 16px',
               borderRadius: '10px',
               border: 'none',
@@ -143,6 +154,7 @@ export default function AdminAnalytics() {
           <button
             onClick={fetchAnalytics}
             style={{
+              flex: isMobile ? '1 1 100%' : 'none',
               padding: '10px 20px',
               borderRadius: '10px',
               background: '#485B7E',
@@ -160,35 +172,35 @@ export default function AdminAnalytics() {
       </div>
 
       {/* Stats Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '32px' }}>
-        <div style={{ background: '#C1CDE2', borderRadius: '16px', padding: '24px', border: '1px solid #8E99AC' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: isMobile ? '12px' : '20px', marginBottom: '32px' }}>
+        <div style={{ background: '#C1CDE2', borderRadius: '16px', padding: isMobile ? '16px' : '24px', border: '1px solid #8E99AC' }}>
           <p style={{ margin: 0, fontSize: '14px', color: '#5D5D5E', fontFamily: "'Poppins', sans-serif" }}>Total Properties</p>
-          <p style={{ margin: '8px 0 0 0', fontSize: '36px', fontWeight: 700, color: '#AB6430', fontFamily: "'Poppins', sans-serif" }}>
+          <p style={{ margin: '8px 0 0 0', fontSize: isMobile ? '28px' : '36px', fontWeight: 700, color: '#AB6430', fontFamily: "'Poppins', sans-serif" }}>
             {data?.properties.total || 0}
           </p>
         </div>
-        <div style={{ background: '#C1CDE2', borderRadius: '16px', padding: '24px', border: '1px solid #8E99AC' }}>
+        <div style={{ background: '#C1CDE2', borderRadius: '16px', padding: isMobile ? '16px' : '24px', border: '1px solid #8E99AC' }}>
           <p style={{ margin: 0, fontSize: '14px', color: '#5D5D5E', fontFamily: "'Poppins', sans-serif" }}>Total Enquiries</p>
-          <p style={{ margin: '8px 0 0 0', fontSize: '36px', fontWeight: 700, color: '#AB6430', fontFamily: "'Poppins', sans-serif" }}>
+          <p style={{ margin: '8px 0 0 0', fontSize: isMobile ? '28px' : '36px', fontWeight: 700, color: '#AB6430', fontFamily: "'Poppins', sans-serif" }}>
             {data?.enquiries.total || 0}
           </p>
         </div>
-        <div style={{ background: '#C1CDE2', borderRadius: '16px', padding: '24px', border: '1px solid #8E99AC' }}>
+        <div style={{ background: '#C1CDE2', borderRadius: '16px', padding: isMobile ? '16px' : '24px', border: '1px solid #8E99AC' }}>
           <p style={{ margin: 0, fontSize: '14px', color: '#5D5D5E', fontFamily: "'Poppins', sans-serif" }}>Total Bookings</p>
-          <p style={{ margin: '8px 0 0 0', fontSize: '36px', fontWeight: 700, color: '#AB6430', fontFamily: "'Poppins', sans-serif" }}>
+          <p style={{ margin: '8px 0 0 0', fontSize: isMobile ? '28px' : '36px', fontWeight: 700, color: '#AB6430', fontFamily: "'Poppins', sans-serif" }}>
             {data?.bookings.total || 0}
           </p>
         </div>
-        <div style={{ background: '#C1CDE2', borderRadius: '16px', padding: '24px', border: '1px solid #8E99AC' }}>
+        <div style={{ background: '#C1CDE2', borderRadius: '16px', padding: isMobile ? '16px' : '24px', border: '1px solid #8E99AC' }}>
           <p style={{ margin: 0, fontSize: '14px', color: '#5D5D5E', fontFamily: "'Poppins', sans-serif" }}>Active Listings</p>
-          <p style={{ margin: '8px 0 0 0', fontSize: '36px', fontWeight: 700, color: '#AB6430', fontFamily: "'Poppins', sans-serif" }}>
+          <p style={{ margin: '8px 0 0 0', fontSize: isMobile ? '28px' : '36px', fontWeight: 700, color: '#AB6430', fontFamily: "'Poppins', sans-serif" }}>
             {data?.properties.active || 0}
           </p>
         </div>
       </div>
 
       {/* Charts Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', marginBottom: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: '24px', marginBottom: '24px' }}>
         {/* Property Status Pie Chart */}
         <div style={{ background: '#C1CDE2', borderRadius: '16px', padding: '24px', border: '1px solid #8E99AC' }}>
           <h3 style={{ margin: '0 0 20px 0', fontSize: '18px', fontWeight: 600, color: '#2F3E5A', fontFamily: "'Poppins', sans-serif" }}>
@@ -239,7 +251,7 @@ export default function AdminAnalytics() {
       </div>
 
       {/* Monthly Trends Line Chart */}
-      <div style={{ background: '#C1CDE2', borderRadius: '16px', padding: '24px', border: '1px solid #8E99AC' }}>
+      <div style={{ background: '#C1CDE2', borderRadius: '16px', padding: isMobile ? '16px' : '24px', border: '1px solid #8E99AC' }}>
         <h3 style={{ margin: '0 0 20px 0', fontSize: '18px', fontWeight: 600, color: '#2F3E5A', fontFamily: "'Poppins', sans-serif" }}>
           Trends ({
             timeGranularity === 'day' ? 'Daily' :
@@ -247,17 +259,21 @@ export default function AdminAnalytics() {
             'Monthly'
           })
         </h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data?.monthlyTrends || []}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#8E99AC" />
-            <XAxis dataKey="month" stroke="#2F3E5A" />
-            <YAxis stroke="#2F3E5A" />
-            <Tooltip contentStyle={{ background: '#D1DAEA', border: 'none', borderRadius: '8px' }} />
-            <Line type="monotone" dataKey="properties" stroke="#485B7E" strokeWidth={2} name="Properties" />
-            <Line type="monotone" dataKey="enquiries" stroke="#AB6430" strokeWidth={2} name="Enquiries" />
-            <Line type="monotone" dataKey="bookings" stroke="#97A7C7" strokeWidth={2} name="Bookings" />
-          </LineChart>
-        </ResponsiveContainer>
+        <div style={{ width: '100%', overflowX: isMobile ? 'auto' : 'visible', paddingBottom: isMobile ? '8px' : '0' }}>
+          <div style={{ minWidth: isMobile ? '600px' : '100%', height: 300 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data?.monthlyTrends || []}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#8E99AC" />
+                <XAxis dataKey="month" stroke="#2F3E5A" style={{ fontSize: isMobile ? '12px' : '14px' }} />
+                <YAxis stroke="#2F3E5A" style={{ fontSize: isMobile ? '12px' : '14px' }} width={isMobile ? 35 : 40} />
+                <Tooltip contentStyle={{ background: '#D1DAEA', border: 'none', borderRadius: '8px', fontSize: isMobile ? '12px' : '14px' }} />
+                <Line type="monotone" dataKey="properties" stroke="#485B7E" strokeWidth={2} name="Properties" />
+                <Line type="monotone" dataKey="enquiries" stroke="#AB6430" strokeWidth={2} name="Enquiries" />
+                <Line type="monotone" dataKey="bookings" stroke="#97A7C7" strokeWidth={2} name="Bookings" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
     </div>
   );

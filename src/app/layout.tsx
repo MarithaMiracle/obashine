@@ -5,7 +5,7 @@ import AppShell from '@/components/AppShell';
 export const metadata: Metadata = {
   title: 'ObaShine Properties | Verified Homes in Lagos',
   description: 'Trusted property platform with verified listings in Lagos.',
-  icons: { icon: '/favicon.ico' },
+  icons: { icon: '/obashine favicon.png' },
 };
 
 export default function RootLayout({

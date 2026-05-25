@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import SearchAndFilter from '@/components/SearchAndFilter';
 import WhyChoose from '@/components/WhyChoose';
@@ -42,6 +42,14 @@ export default function SellWithUsPage() {
   });
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const scrollToForm = () => {
     const formSection = document.getElementById('sell-form');
@@ -92,7 +100,7 @@ export default function SellWithUsPage() {
       {/* Hero Section */}
       <section style={{
         width: "100%", margin: 0,
-        height: 443, position: "relative", borderRadius: 0, overflow: "hidden",
+        height: isMobile ? 380 : 443, position: "relative", borderRadius: 0, overflow: "hidden",
         display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "flex-start",
       }}>
         <Image
@@ -108,24 +116,26 @@ export default function SellWithUsPage() {
         }} />
 
         <div style={{
-          position: "relative", zIndex: 3, textAlign: "left", paddingLeft: 109,
-          width: "100%", maxWidth: 1416, margin: "0 auto"
+          position: "relative", zIndex: 3, textAlign: isMobile ? "center" : "left", 
+          paddingLeft: isMobile ? 0 : 109, padding: isMobile ? "0 16px" : undefined,
+          width: "100%", maxWidth: 1416, margin: "0 auto",
+          display: isMobile ? "flex" : "block", flexDirection: "column", alignItems: "center"
         }}>
           <h1 style={{
-            fontFamily: "'Poppins', sans-serif", fontSize: 48, fontWeight: 600,
-            color: "#fff", lineHeight: "49px", margin: "0 0 10px 0"
+            fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 36 : 48, fontWeight: 600,
+            color: "#fff", lineHeight: isMobile ? "40px" : "49px", margin: "0 0 10px 0"
           }}>
             Sell Your Property<br />
             <span style={{ color: "#F2E1D2" }}>with Confidence</span>
           </h1>
           <p style={{
-            fontFamily: "'Poppins', sans-serif", fontSize: 18, fontWeight: 400,
-            color: "#fff", lineHeight: "21px", margin: "0 0 40px 0"
+            fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 16 : 18, fontWeight: 400,
+            color: "#fff", lineHeight: isMobile ? "24px" : "21px", margin: "0 0 40px 0"
           }}>
             We handle everything from verification to<br />
             connecting you with serious buyers.
           </p>
-          <div style={{ display: "flex", gap: 12 }}>
+          <div style={{ display: "flex", gap: 12, justifyContent: isMobile ? "center" : "flex-start" }}>
             <button onClick={scrollToForm} style={{
               background: "#AB6430", color: "#fff", fontSize: 13, fontWeight: 600,
               padding: "8px 24px", borderRadius: 999, border: "none", cursor: "pointer"
@@ -145,10 +155,10 @@ export default function SellWithUsPage() {
       </section>
 
       {/* Note Section */}
-      <section style={{ maxWidth: 954, margin: "80px auto", padding: "0 24px", textAlign: "center" }}>
-        <div style={{ width: 619, height: 3, background: "#AB6430", margin: "0 auto 12px auto" }} />
+      <section style={{ maxWidth: 954, margin: isMobile ? "40px auto" : "80px auto", padding: "0 24px", textAlign: "center" }}>
+        <div style={{ width: isMobile ? "100%" : 619, maxWidth: 619, height: 3, background: "#AB6430", margin: "0 auto 12px auto" }} />
         <p style={{
-          fontFamily: "'Poppins', sans-serif", fontSize: 30, fontWeight: 400, lineHeight: "41px",
+          fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 20 : 30, fontWeight: 400, lineHeight: isMobile ? "30px" : "41px",
           color: "#2F3E5A", margin: 0
         }}>
           We don’t operate like a marketplace. Every property is managed and verified by our team before it goes live.<br />
@@ -157,15 +167,15 @@ export default function SellWithUsPage() {
       </section>
 
       {/* How It Works Section */}
-      <section style={{ maxWidth: 1200, margin: "0 auto 80px", padding: "0 24px" }}>
+      <section style={{ maxWidth: 1200, margin: isMobile ? "0 auto 40px" : "0 auto 80px", padding: "0 24px" }}>
         <h2 style={{
-          fontFamily: "'Poppins', sans-serif", fontSize: 36, fontWeight: 700,
-          color: "#5D5D5E", textAlign: "center", lineHeight: "42px", margin: "0 0 60px 0"
+          fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 28 : 36, fontWeight: 700,
+          color: "#5D5D5E", textAlign: "center", lineHeight: isMobile ? "36px" : "42px", margin: isMobile ? "0 0 40px 0" : "0 0 60px 0"
         }}>
           How it Works
         </h2>
         {/* Top row: 3 steps */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32, marginBottom: 48 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 32, marginBottom: isMobile ? 32 : 48 }}>
           {howItWorksSteps.slice(0, 3).map((step, index) => (
             <div key={index} style={{ textAlign: "center" }}>
               <div style={{ width: 180, height: 180, borderRadius: 12, overflow: "hidden", margin: "0 auto 24px auto" }}>
@@ -236,7 +246,7 @@ export default function SellWithUsPage() {
       <WhyChoose />
 
       {/* Ready to List Your Property Section */}
-      <section style={{ position: "relative", height: 404, overflow: "hidden" }}>
+      <section style={{ position: "relative", height: isMobile ? 300 : 404, overflow: "hidden" }}>
         <div style={{
           position: "absolute", inset: 0,
           backgroundImage: `url("${mediaBase}/4c46ede4ab6e095641e900aa8df6556f7adf6adc1c29793ba3084574594eff40.png")`,
@@ -251,12 +261,12 @@ export default function SellWithUsPage() {
           position: "relative", zIndex: 1,
           maxWidth: 1416, margin: "0 auto", padding: "0 24px",
           height: "100%", display: "flex", flexDirection: "column",
-          justifyContent: "center", alignItems: "flex-end"
+          justifyContent: "center", alignItems: isMobile ? "center" : "flex-end"
         }}>
           <h2 style={{
-            fontFamily: "'Poppins', sans-serif", fontSize: 48, fontWeight: 600,
-            color: "#fff", lineHeight: "54px", margin: 0,
-            textAlign: "right"
+            fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 36 : 48, fontWeight: 600,
+            color: "#fff", lineHeight: isMobile ? "44px" : "54px", margin: 0,
+            textAlign: isMobile ? "center" : "right", width: isMobile ? "100%" : "auto"
           }}>
             Ready to List<br />
             Your Property?
@@ -265,11 +275,11 @@ export default function SellWithUsPage() {
       </section>
 
       {/* Contact Form Section */}
-      <section id="sell-form" style={{ maxWidth: 700, margin: "0 auto", padding: "40px 24px 80px 24px" }}>
+      <section id="sell-form" style={{ maxWidth: 700, margin: "0 auto", padding: isMobile ? "40px 16px 60px 16px" : "40px 24px 80px 24px" }}>
         {/* Form Container */}
         <div style={{
           background: "#F2E1D2",
-          padding: "36px 32px",
+          padding: isMobile ? "24px 16px" : "36px 32px",
           borderRadius: 16,
           boxSizing: "border-box",
         }}>
@@ -341,7 +351,7 @@ export default function SellWithUsPage() {
                   placeholder="John"
                   style={{
                     width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #E0D5C5",
-                    fontSize: 15, background: "#fff", fontFamily: "'Poppins', sans-serif",
+                    fontSize: isMobile ? 16 : 15, background: "#fff", fontFamily: "'Poppins', sans-serif",
                     outline: "none", transition: "border-color 0.2s", boxSizing: "border-box"
                   }}
                 />
@@ -357,7 +367,7 @@ export default function SellWithUsPage() {
                   placeholder="Doe"
                   style={{
                     width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #E0D5C5",
-                    fontSize: 15, background: "#fff", fontFamily: "'Poppins', sans-serif",
+                    fontSize: isMobile ? 16 : 15, background: "#fff", fontFamily: "'Poppins', sans-serif",
                     outline: "none", transition: "border-color 0.2s", boxSizing: "border-box"
                   }}
                 />
@@ -375,7 +385,7 @@ export default function SellWithUsPage() {
                 placeholder="+234 801 234 5678"
                 style={{
                   width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #E0D5C5",
-                  fontSize: 15, background: "#fff", fontFamily: "'Poppins', sans-serif",
+                  fontSize: isMobile ? 16 : 15, background: "#fff", fontFamily: "'Poppins', sans-serif",
                   outline: "none", transition: "border-color 0.2s", boxSizing: "border-box"
                 }}
               />
@@ -392,7 +402,7 @@ export default function SellWithUsPage() {
                 placeholder="john@example.com"
                 style={{
                   width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #E0D5C5",
-                  fontSize: 15, background: "#fff", fontFamily: "'Poppins', sans-serif",
+                  fontSize: isMobile ? 16 : 15, background: "#fff", fontFamily: "'Poppins', sans-serif",
                   outline: "none", transition: "border-color 0.2s", boxSizing: "border-box"
                 }}
               />
@@ -408,7 +418,7 @@ export default function SellWithUsPage() {
                   onChange={(e) => setFormData({ ...formData, propertyType: e.target.value })}
                   style={{
                     width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #E0D5C5",
-                    fontSize: 15, background: "#fff", fontFamily: "'Poppins', sans-serif",
+                    fontSize: isMobile ? 16 : 15, background: "#fff", fontFamily: "'Poppins', sans-serif",
                     outline: "none", transition: "border-color 0.2s", boxSizing: "border-box",
                     cursor: "pointer", appearance: "none",
                     backgroundImage: "url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23AB6430%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')",
@@ -453,7 +463,7 @@ export default function SellWithUsPage() {
                   placeholder="e.g., Lekki, Lagos"
                   style={{
                     width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #E0D5C5",
-                    fontSize: 15, background: "#fff", fontFamily: "'Poppins', sans-serif",
+                    fontSize: isMobile ? 16 : 15, background: "#fff", fontFamily: "'Poppins', sans-serif",
                     outline: "none", transition: "border-color 0.2s", boxSizing: "border-box"
                   }}
                 />
@@ -471,7 +481,7 @@ export default function SellWithUsPage() {
                 rows={3}
                 style={{
                   width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #E0D5C5",
-                  fontSize: 15, background: "#fff", resize: "none", fontFamily: "'Poppins', sans-serif",
+                  fontSize: isMobile ? 16 : 15, background: "#fff", resize: "none", fontFamily: "'Poppins', sans-serif",
                   outline: "none", transition: "border-color 0.2s", lineHeight: "1.5", boxSizing: "border-box"
                 }}
               />

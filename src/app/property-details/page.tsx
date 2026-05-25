@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import SearchAndFilter from '@/components/SearchAndFilter';
 import { createClient } from '@/lib/supabase/client';
+import { useMediaQuery } from '@/lib/utils';
 
 const mediaBase = "https://brxpjwtisajinfhbqchs.supabase.co/storage/v1/object/public/main/media";
 
@@ -23,7 +24,7 @@ interface Property {
 
 const ITEMS_PER_PAGE = 5;
 
-function PropertyCard({ property }: { property: Property }) {
+function PropertyCard({ property, isMobile }: { property: Property, isMobile: boolean }) {
   // Add a features string since our seeded properties don't have a features column
   const features = [
     property.bedrooms && `${property.bedrooms} Bedrooms`,
@@ -83,17 +84,17 @@ function PropertyCard({ property }: { property: Property }) {
   };
 
   return (
-    <div style={{ marginBottom: 60, position: 'relative' }}>
-      <div style={{ display: "flex", gap: 32, justifyContent: "center", marginBottom: showBookingForm ? 20 : 60, flexWrap: 'wrap' }}>
+    <div style={{ marginBottom: isMobile ? 40 : 60, position: 'relative' }}>
+      <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: isMobile ? 16 : 32, justifyContent: "center", marginBottom: showBookingForm ? 20 : (isMobile ? 40 : 60), flexWrap: 'nowrap' }}>
         {/* Left - Main Image */}
-        <div style={{ width: 550, flexShrink: 0, position: "relative", height: 550 }}>
-          <div style={{ position: "absolute", inset: 0, borderRadius: 21, overflow: "visible" }}>
-            <Image src={activeImage} alt={property.title} fill style={{ objectFit: "cover", borderRadius: 21 }} />
+        <div style={{ width: isMobile ? "100%" : 550, flexShrink: 0, position: "relative", height: isMobile ? 320 : 550 }}>
+          <div style={{ position: "absolute", inset: 0, borderRadius: isMobile ? 16 : 21, overflow: "visible" }}>
+            <Image src={activeImage} alt={property.title} fill style={{ objectFit: "cover", borderRadius: isMobile ? 16 : 21 }} />
             
             {/* Verified Badge */}
             <div style={{
               position: "absolute", right: -16, top: -16, zIndex: 20,
-              width: 50, height: 50,
+              width: isMobile ? 40 : 50, height: isMobile ? 40 : 50,
             }}>
               <img
                 src={`${mediaBase}/ae496f9ef257bbc55871511540d0896c688b180e4eaf8dc0186ba5703d00d02b.png`}
@@ -106,25 +107,34 @@ function PropertyCard({ property }: { property: Property }) {
             onClick={() => setActiveIndex((prev) => (prev + 1) % images.length)}
             style={{
               position: "absolute", right: 16, top: "50%", transform: "translateY(-50%)",
-              width: 56, height: 56, border: "none", cursor: "pointer",
+              width: isMobile ? 44 : 56, height: isMobile ? 44 : 56, border: "none", cursor: "pointer",
               background: "rgba(255,255,255,0.9)", borderRadius: "50%",
               display: "flex", alignItems: "center", justifyContent: "center",
               boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
             }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <svg width={isMobile ? "18" : "24"} height={isMobile ? "18" : "24"} viewBox="0 0 24 24" fill="none">
               <path d="M9 18l6-6-6-6" stroke="#2F3E5A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
         </div>
 
         {/* Middle - Thumbnails */}
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: 550 }}>
+        <div style={{ 
+          display: "flex", 
+          flexDirection: isMobile ? "row" : "column", 
+          justifyContent: isMobile ? "flex-start" : "space-between", 
+          gap: isMobile ? 12 : 0,
+          height: isMobile ? "auto" : 550,
+          overflowX: isMobile ? "auto" : "visible",
+          paddingBottom: isMobile ? 8 : 0,
+          scrollbarWidth: "none"
+        }}>
           {thumbnails.map((src, i) => (
             <div
               key={i}
               onClick={() => setActiveIndex(images.indexOf(src))}
-              style={{ position: "relative", width: 120, height: 120, borderRadius: 16, overflow: "hidden", cursor: "pointer" }}
+              style={{ position: "relative", width: isMobile ? 80 : 120, height: isMobile ? 80 : 120, borderRadius: isMobile ? 12 : 16, overflow: "hidden", cursor: "pointer", flexShrink: 0 }}
             >
               <Image src={src} alt={`Thumbnail ${i + 1}`} fill style={{ objectFit: "cover" }} />
             </div>
@@ -132,33 +142,33 @@ function PropertyCard({ property }: { property: Property }) {
         </div>
 
         {/* Right - Info Panel */}
-        <div style={{ width: 420, flexShrink: 0, height: 550, overflow: "hidden", borderRadius: 21 }}>
+        <div style={{ width: isMobile ? "100%" : 420, flexShrink: 0, height: isMobile ? "auto" : 550, overflow: "hidden", borderRadius: isMobile ? 16 : 21 }}>
           <div style={{
-            background: "rgba(237,237,237,1)", padding: "28px 24px", height: "100%",
-            display: "flex", flexDirection: "column", justifyContent: "space-between",
+            background: "rgba(237,237,237,1)", padding: isMobile ? "20px 16px" : "28px 24px", height: "100%",
+            display: "flex", flexDirection: "column", justifyContent: "space-between", gap: isMobile ? 16 : 0,
             boxSizing: "border-box",
           }}>
             <div>
-              <p style={{ margin: 0, fontSize: 15, fontWeight: 400, color: "rgba(137,137,137,1)" }}>Price</p>
-              <p style={{ margin: "6px 0 0 0", fontSize: 34, fontWeight: 700, color: "rgba(37,45,60,1)" }}>₦{Number(property.price).toLocaleString()}</p>
+              <p style={{ margin: 0, fontSize: isMobile ? 13 : 15, fontWeight: 400, color: "rgba(137,137,137,1)" }}>Price</p>
+              <p style={{ margin: "4px 0 0 0", fontSize: isMobile ? 28 : 34, fontWeight: 700, color: "rgba(37,45,60,1)" }}>₦{Number(property.price).toLocaleString()}</p>
             </div>
             <div>
-              <p style={{ margin: 0, fontSize: 15, fontWeight: 400, color: "rgba(137,137,137,1)" }}>Title</p>
-              <p style={{ margin: "6px 0 0 0", fontSize: 20, fontWeight: 600, color: "rgba(37,45,60,1)" }}>{property.title}</p>
+              <p style={{ margin: 0, fontSize: isMobile ? 13 : 15, fontWeight: 400, color: "rgba(137,137,137,1)" }}>Title</p>
+              <p style={{ margin: "4px 0 0 0", fontSize: isMobile ? 18 : 20, fontWeight: 600, color: "rgba(37,45,60,1)" }}>{property.title}</p>
             </div>
             <div>
-              <p style={{ margin: 0, fontSize: 15, fontWeight: 400, color: "rgba(137,137,137,1)" }}>Location</p>
-              <p style={{ margin: "6px 0 0 0", fontSize: 20, fontWeight: 600, color: "rgba(37,45,60,1)" }}>{property.location}</p>
+              <p style={{ margin: 0, fontSize: isMobile ? 13 : 15, fontWeight: 400, color: "rgba(137,137,137,1)" }}>Location</p>
+              <p style={{ margin: "4px 0 0 0", fontSize: isMobile ? 18 : 20, fontWeight: 600, color: "rgba(37,45,60,1)" }}>{property.location}</p>
             </div>
             <div>
-              <p style={{ margin: 0, fontSize: 15, fontWeight: 400, color: "rgba(137,137,137,1)", marginBottom: "8px" }}>Features:</p>
-              <div style={{ fontSize: 16, fontWeight: 500, color: "rgba(37,45,60,1)", lineHeight: 1.8, whiteSpace: "pre-line" }}>
+              <p style={{ margin: 0, fontSize: isMobile ? 13 : 15, fontWeight: 400, color: "rgba(137,137,137,1)", marginBottom: "4px" }}>Features:</p>
+              <div style={{ fontSize: isMobile ? 15 : 16, fontWeight: 500, color: "rgba(37,45,60,1)", lineHeight: 1.6, whiteSpace: "pre-line" }}>
                 {features}
               </div>
             </div>
             <div>
-              <p style={{ margin: 0, fontSize: 15, fontWeight: 400, color: "rgba(137,137,137,1)", marginBottom: "8px" }}>Description:</p>
-              <div style={{ fontSize: 15, fontWeight: 400, color: "rgba(37,45,60,1)", lineHeight: 1.7 }}>
+              <p style={{ margin: 0, fontSize: isMobile ? 13 : 15, fontWeight: 400, color: "rgba(137,137,137,1)", marginBottom: "4px" }}>Description:</p>
+              <div style={{ fontSize: isMobile ? 14 : 15, fontWeight: 400, color: "rgba(37,45,60,1)", lineHeight: 1.6 }}>
                 {property.description}
               </div>
             </div>
@@ -191,7 +201,7 @@ function PropertyCard({ property }: { property: Property }) {
             margin: '0 auto 60px',
             background: '#D1DAEA',
             borderRadius: '20px',
-            padding: '40px 32px',
+            padding: isMobile ? '32px 20px' : '40px 32px',
             border: '1px solid #8E99AC',
             textAlign: 'center'
           }}
@@ -245,13 +255,13 @@ function PropertyCard({ property }: { property: Property }) {
             margin: '0 auto 60px',
             background: '#D1DAEA',
             borderRadius: '20px',
-            padding: '32px',
+            padding: isMobile ? '24px' : '32px',
             border: '1px solid #8E99AC'
           }}
         >
           <h3 style={{ 
             margin: '0 0 24px 0', 
-            fontSize: '24px', 
+            fontSize: isMobile ? '20px' : '24px', 
             fontWeight: 600, 
             color: '#2F3E5A', 
             fontFamily: "'Poppins', sans-serif" 
@@ -408,6 +418,7 @@ export default function PropertyDetailsPage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [isClient, setIsClient] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const fetchProperties = async () => {
     try {
@@ -435,8 +446,8 @@ export default function PropertyDetailsPage() {
     <main style={{ overflowX: "hidden", background: "#fff" }}>
       {/* Hero Section */}
       <section style={{
-        width: 1416, maxWidth: "100%", margin: "0 auto",
-        height: 443, position: "relative", borderRadius: 21, overflow: "hidden",
+        width: isMobile ? "100%" : 1416, maxWidth: "100%", margin: "0 auto",
+        height: isMobile ? 380 : 443, position: "relative", borderRadius: isMobile ? 0 : 21, overflow: "hidden",
         display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center",
       }}>
         <Image
@@ -458,19 +469,19 @@ export default function PropertyDetailsPage() {
           position: "absolute", inset: 0,
           background: "linear-gradient(90deg, rgba(45,58,82,1) 0%, rgba(115,115,115,0.36) 75.481%)",
         }} />
-        <div style={{ position: "relative", zIndex: 3, width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <div style={{ width: "100%", maxWidth: 900, position: "relative" }}>
+        <div style={{ position: "relative", zIndex: 3, width: "100%", display: "flex", justifyContent: "center", alignItems: "center", padding: isMobile ? "0 16px" : 0 }}>
+          <div style={{ width: isMobile ? "calc(100% - 32px)" : "100%", maxWidth: 900, position: "relative" }}>
             <SearchAndFilter page="buy" />
           </div>
         </div>
       </section>
 
       {/* Properties List */}
-      <div style={{ maxWidth: 1300, margin: "0 auto", padding: "80px 24px 0" }}>
+      <div style={{ maxWidth: 1300, margin: "0 auto", padding: isMobile ? "40px 16px 0" : "80px 24px 0" }}>
         <h2 style={{
-          fontFamily: "'Poppins', sans-serif", fontSize: 48, fontWeight: 600,
-          color: "#2F3E5A", textAlign: "center", lineHeight: "47px",
-          margin: "0 0 48px 0",
+          fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 28 : 48, fontWeight: 600,
+          color: "#2F3E5A", textAlign: "center", lineHeight: isMobile ? "36px" : "47px",
+          margin: isMobile ? "0 0 32px 0" : "0 0 48px 0",
         }}>
           Property Details
         </h2>
@@ -494,9 +505,9 @@ export default function PropertyDetailsPage() {
 
         {paginated.map((property, index) => (
           <div key={property.id}>
-            <PropertyCard property={property} />
+            <PropertyCard property={property} isMobile={isMobile} />
             {index < paginated.length - 1 && (
-              <hr style={{ border: 'none', borderTop: '1px solid rgba(0,0,0,0.1)', margin: '0 0 60px 0' }} />
+              <hr style={{ border: 'none', borderTop: '1px solid rgba(0,0,0,0.1)', margin: isMobile ? '0 0 40px 0' : '0 0 60px 0' }} />
             )}
           </div>
         ))}
@@ -504,19 +515,19 @@ export default function PropertyDetailsPage() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', padding: '20px 0 80px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: isMobile ? '8px' : '12px', padding: isMobile ? '20px 0 60px' : '20px 0 80px', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
           <button
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             style={{
-              padding: '10px 20px', borderRadius: '8px', border: '1px solid #2F3E5A',
+              padding: isMobile ? '8px 12px' : '10px 20px', borderRadius: '8px', border: '1px solid #2F3E5A',
               background: currentPage === 1 ? '#f0f0f0' : '#fff',
               color: currentPage === 1 ? '#999' : '#2F3E5A',
               cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-              fontSize: '14px', fontWeight: 500, fontFamily: "'Poppins', sans-serif",
+              fontSize: isMobile ? '13px' : '14px', fontWeight: 500, fontFamily: "'Poppins', sans-serif",
             }}
           >
-            Previous
+            {isMobile ? 'Prev' : 'Previous'}
           </button>
 
           {(() => {
@@ -558,14 +569,14 @@ export default function PropertyDetailsPage() {
                   key={page}
                   onClick={() => setCurrentPage(page as number)}
                   style={{
-                    width: '40px',
-                    height: '40px',
+                    width: isMobile ? '32px' : '40px',
+                    height: isMobile ? '32px' : '40px',
                     borderRadius: '8px',
                     border: 'none',
                     background: currentPage === page ? '#2F3E5A' : '#f0f0f0',
                     color: currentPage === page ? '#fff' : '#2F3E5A',
                     cursor: 'pointer',
-                    fontSize: '14px',
+                    fontSize: isMobile ? '13px' : '14px',
                     fontWeight: 500,
                     fontFamily: "'Poppins', sans-serif"
                   }}
@@ -580,14 +591,14 @@ export default function PropertyDetailsPage() {
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
             style={{
-              padding: '10px 20px', borderRadius: '8px', border: '1px solid #2F3E5A',
+              padding: isMobile ? '8px 12px' : '10px 20px', borderRadius: '8px', border: '1px solid #2F3E5A',
               background: currentPage === totalPages ? '#f0f0f0' : '#fff',
               color: currentPage === totalPages ? '#999' : '#2F3E5A',
               cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-              fontSize: '14px', fontWeight: 500, fontFamily: "'Poppins', sans-serif",
+              fontSize: isMobile ? '13px' : '14px', fontWeight: 500, fontFamily: "'Poppins', sans-serif",
             }}
           >
-            Next
+            {isMobile ? 'Next' : 'Next'}
           </button>
         </div>
       )}

@@ -32,75 +32,147 @@ export default function Hero() {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
-  return (
-    <div style={{ padding: "0 16px" }}>
-      <div style={{
-        maxWidth: 1380, margin: "0 auto",
-        borderRadius: 44, overflow: "hidden",
-        position: "relative", height: 600,
-      }}>
 
-        {/* Sliding background images */}
-        {heroSlides.map((slide, index) => (
-          <img
-            key={index}
-            src={slide.image}
-            alt=""
+  return (
+    <>
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .hero-container {
+            padding: 0 12px !important;
+          }
+          .hero-main {
+            height: 420px !important;
+            border-radius: 20px !important;
+          }
+          .hero-headline {
+            top: 10% !important;
+            width: 90% !important;
+          }
+          .hero-headline h1 {
+            font-size: 28px !important;
+            line-height: 1.2 !important;
+            white-space: normal !important;
+          }
+          .hero-search-area {
+            bottom: 24px !important;
+            padding: 0 !important;
+            width: calc(100% - 32px) !important;
+          }
+          .hero-tagline {
+            font-size: 9px !important;
+            letter-spacing: 0.18em !important;
+            margin-top: 16px !important;
+            padding: 0 8px !important;
+          }
+        }
+      `}</style>
+      <div className="hero-container" style={{ padding: "0 16px" }}>
+        <div
+          className="hero-main"
+          style={{
+            maxWidth: 1380,
+            margin: "0 auto",
+            borderRadius: 44,
+            overflow: "hidden",
+            position: "relative",
+            height: 600,
+          }}
+        >
+          {/* Sliding background images */}
+          {heroSlides.map((slide, index) => (
+            <img
+              key={index}
+              src={slide.image}
+              alt=""
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: index === 1 ? "center top" : "center 30%",
+                opacity: index === currentSlide ? 1 : 0,
+                transition: "opacity 1s ease-in-out",
+              }}
+            />
+          ))}
+
+          {/* Colored gradient overlay */}
+          <div
             style={{
-              position: "absolute", inset: 0,
-              width: "100%", height: "100%",
-              objectFit: "cover",
-              objectPosition: index === 1 ? "center top" : "center 30%",
-              opacity: index === currentSlide ? 1 : 0,
-              transition: "opacity 1s ease-in-out",
+              position: "absolute",
+              inset: 0,
+              background: heroSlides[currentSlide].overlay,
+              transition: "background 1s ease-in-out",
             }}
           />
-        ))}
 
-        {/* Colored gradient overlay */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: heroSlides[currentSlide].overlay,
-          transition: "background 1s ease-in-out",
-        }} />
+          {/* Content */}
+          <div style={{ position: "relative", height: "100%" }}>
+            {/* Headline */}
+            <div
+              className="hero-headline"
+              style={{
+                position: "absolute",
+                top: "10%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                textAlign: "center",
+              }}
+            >
+              <h1
+                style={{
+                  margin: 0,
+                  fontSize: 56,
+                  fontWeight: 500,
+                  lineHeight: 1.1,
+                  color: heroSlides[currentSlide].titleColor,
+                  fontFamily: "Georgia, 'Times New Roman', serif",
+                  letterSpacing: "-0.01em",
+                  whiteSpace: "nowrap",
+                }}
+                dangerouslySetInnerHTML={{ __html: heroSlides[currentSlide].title }}
+              />
+            </div>
 
-        {/* Content */}
-        <div style={{
-          position: "relative", height: "100%",
-        }}>
-
-          {/* Headline */}
-          <div style={{ 
-            position: "absolute", top: "10%", left: "50%", transform: "translateX(-50%)",
-            textAlign: "center"
-          }}>
-            <h1 style={{
-              margin: 0, fontSize: 56, fontWeight: 500, lineHeight: 1.1,
-              color: heroSlides[currentSlide].titleColor,
-              fontFamily: "Georgia, 'Times New Roman', serif",
-              letterSpacing: "-0.01em",
-            }} dangerouslySetInnerHTML={{ __html: heroSlides[currentSlide].title }} />
-          </div>
-
-          {/* Search area */}
-          <div style={{
-            width: "100%", maxWidth: 900,
-            padding: "0 24px",
-            position: "absolute", bottom: 60, left: "50%", transform: "translateX(-50%)",
-          }}>
-            <SearchAndFilter page="buy" />
+            {/* Search area */}
+            <div
+              className="hero-search-area"
+              style={{
+                width: "100%",
+                maxWidth: 900,
+                position: "absolute",
+                bottom: 60,
+                left: "50%",
+                transform: "translateX(-50%)",
+                boxSizing: "border-box",
+              }}
+            >
+              <SearchAndFilter page="buy" />
+            </div>
           </div>
         </div>
+
+        {/* Tagline below hero */}
+        <p
+          className="hero-tagline"
+          style={{
+            textAlign: "center",
+            margin: "24px 0 0",
+            fontSize: 13,
+            fontWeight: 700,
+            letterSpacing: "0.40em",
+            textTransform: "uppercase",
+            color:
+              heroSlides[currentSlide].titleColor === "#f0d9a0"
+                ? "#C8762C"
+                : "#2F3E5A",
+          }}
+        >
+          100% Verified Listings &nbsp;•&nbsp; Professionally Managed &nbsp;•&nbsp;
+          Trusted Process
+        </p>
       </div>
-      {/* Tagline below hero */}
-      <p style={{
-        textAlign: "center", margin: "24px 0 0",
-        fontSize: 13, fontWeight: 700,
-        letterSpacing: "0.40em", textTransform: "uppercase",
-        color: heroSlides[currentSlide].titleColor === "#f0d9a0" ? "#C8762C" : "#2F3E5A",
-      }}>
-        100% Verified Listings &nbsp;•&nbsp; Professionally Managed &nbsp;•&nbsp; Trusted Process
-      </p>
-    </div>
+    </>
   );
 }

@@ -1,6 +1,7 @@
-
+"use client";
 
 import Link from 'next/link';
+import { useMediaQuery } from '@/lib/utils';
 
 const mediaBase =
   "https://brxpjwtisajinfhbqchs.supabase.co/storage/v1/object/public/main/media";
@@ -17,82 +18,126 @@ const featuredProperties = [
   "10890b440dee1a982239442426100416e9963bb1f703a8f0f8914e27bf1cb9ff.png",
 ];
 
-export default function FeaturedProperties() {
+function PropertyCard({ image, index, isMobile }: { image: string; index: number; isMobile: boolean }) {
   return (
-    <section style={{ padding: "96px 24px" }}>
-      <div style={{ maxWidth: 1062, margin: "0 auto", textAlign: "center" }}>
-        <h2 style={{ fontSize: 50, fontWeight: 600, color: "#2F3E5A", margin: 0, lineHeight: 1.1 }}>
-          Featured Properties
-        </h2>
-        <p style={{ marginTop: 16, fontSize: 24, fontWeight: 600, color: "#8A8B8E", lineHeight: 1.1, maxWidth: 395, margin: "16px auto 0" }}>
-          Carefully selected homes available for sale and rent
-        </p>
-
-        <div style={{ marginTop: 24, display: "flex", justifyContent: "center", gap: 12 }}>
-          <Link href="/sell-with-us" style={{ textDecoration: 'none' }}>
-            <span style={{ borderRadius: 21, background: "#E2E9F4", padding: "8px 20px", fontSize: 13, fontWeight: 600, color: "#2F3E5A", cursor: 'pointer' }}>
-              Sell with Us
-            </span>
-          </Link>
-          <Link href="/property-details" style={{ textDecoration: 'none' }}>
-            <span style={{ borderRadius: 21, background: "#2F3E5A", padding: "8px 20px", fontSize: 13, fontWeight: 600, color: "#fff", cursor: 'pointer' }}>
-              Properties
-            </span>
-          </Link>
-        </div>
-
-        {/* Row 1 – right-aligned */}
-        <div style={{ marginTop: 48, display: "flex", flexDirection: "column", gap: 10, overflow: "visible", paddingRight: 20 }}>
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: 20 }}>
-            {featuredProperties.slice(0, 4).map((image, index) => (
-              <div key={image} style={{ position: "relative", width: 220, flexShrink: 0 }}>
-                <div style={{
-                  position: "absolute", right: -8, top: -8, zIndex: 10,
-                  width: 29, height: 29,
-                }}>
-                  <img
-                    src={verifiedBadgeUrl}
-                    alt="Verified"
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                  />
-                </div>
-                <div style={{ borderRadius: 14, overflow: "hidden", background: "#d9d9d9" }}>
-                  <img
-                    src={`${mediaBase}/${image}`}
-                    alt={`Featured property ${index + 1}`}
-                    style={{ height: 186, width: "100%", objectFit: "cover", display: "block" }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Row 2 – left-aligned */}
-          <div style={{ display: "flex", justifyContent: "flex-start", gap: 20, paddingRight: 20 }}>
-            {featuredProperties.slice(4, 8).map((image, index) => (
-              <div key={image} style={{ position: "relative", width: 220, flexShrink: 0 }}>
-                <div style={{
-                  position: "absolute", right: -8, top: -8, zIndex: 10,
-                  width: 29, height: 29,
-                }}>
-                  <img
-                    src={verifiedBadgeUrl}
-                    alt="Verified"
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                  />
-                </div>
-                <div style={{ borderRadius: 14, overflow: "hidden", background: "#d9d9d9" }}>
-                  <img
-                    src={`${mediaBase}/${image}`}
-                    alt={`Featured property ${index + 5}`}
-                    style={{ height: 184, width: "100%", objectFit: "cover", display: "block" }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+    <div style={{ position: "relative", width: isMobile ? "100%" : 220, flexShrink: 0 }}>
+      <div style={{
+        position: "absolute", right: -8, top: -8, zIndex: 10,
+        width: 29, height: 29,
+      }}>
+        <img
+          src={verifiedBadgeUrl}
+          alt="Verified"
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        />
       </div>
-    </section>
+      <div style={{ borderRadius: 14, overflow: "hidden", background: "#d9d9d9" }}>
+        <img
+          src={`${mediaBase}/${image}`}
+          alt={`Featured property ${index + 1}`}
+          style={{ height: isMobile ? 110 : 186, width: "100%", objectFit: "cover", display: "block" }}
+        />
+      </div>
+    </div>
+  );
+}
+
+export default function FeaturedProperties() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const scrollRowStyle: React.CSSProperties = isMobile
+    ? {
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: 10,
+        marginLeft: 0,
+        marginRight: 0,
+        paddingLeft: 0,
+        paddingRight: 0,
+      }
+    : {};
+
+  return (
+    <>
+      {isMobile && (
+        <style>{`
+          .fp-scroll-row::-webkit-scrollbar { display: none; }
+        `}</style>
+      )}
+
+      <section style={{ padding: isMobile ? "48px 16px" : "96px 24px" }}>
+        <div style={{ maxWidth: 1062, margin: "0 auto", textAlign: "center" }}>
+          <h2 style={{
+            fontSize: isMobile ? 32 : 50,
+            fontWeight: 600, color: "#2F3E5A",
+            margin: 0, lineHeight: 1.1,
+          }}>
+            Featured Properties
+          </h2>
+          <p style={{
+            marginTop: 16,
+            fontSize: isMobile ? 16 : 24,
+            fontWeight: 600, color: "#8A8B8E",
+            lineHeight: 1.1, maxWidth: 395,
+            margin: "16px auto 0",
+          }}>
+            Carefully selected homes available for sale and rent
+          </p>
+
+          <div style={{ marginTop: 24, display: "flex", justifyContent: "center", gap: 12 }}>
+            <Link href="/sell-with-us" style={{ textDecoration: "none" }}>
+              <span style={{ borderRadius: 21, background: "#E2E9F4", padding: "8px 20px", fontSize: 13, fontWeight: 600, color: "#2F3E5A", cursor: "pointer" }}>
+                Sell with Us
+              </span>
+            </Link>
+            <Link href="/property-details" style={{ textDecoration: "none" }}>
+              <span style={{ borderRadius: 21, background: "#2F3E5A", padding: "8px 20px", fontSize: 13, fontWeight: 600, color: "#fff", cursor: "pointer" }}>
+                Properties
+              </span>
+            </Link>
+          </div>
+
+          <div style={{ marginTop: isMobile ? 32 : 48, display: isMobile ? "grid" : "flex", gridTemplateColumns: isMobile ? "1fr" : "none", flexDirection: isMobile ? "column" : "column", gap: 10 }}>
+
+            {/* Row 1 */}
+            <div
+              className={isMobile ? "" : "fp-scroll-row"}
+              style={{
+                ...scrollRowStyle,
+                ...(!isMobile && {
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: 20,
+                  paddingRight: 20,
+                }),
+              }}
+            >
+              {featuredProperties.slice(0, 4).map((image, index) => (
+                <PropertyCard key={image} image={image} index={index} isMobile={isMobile} />
+              ))}
+            </div>
+
+            {/* Row 2 */}
+            <div
+              className={isMobile ? "" : "fp-scroll-row"}
+              style={{
+                ...scrollRowStyle,
+                ...(!isMobile && {
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  gap: 20,
+                  paddingRight: 20,
+                }),
+              }}
+            >
+              {featuredProperties.slice(4, 8).map((image, index) => (
+                <PropertyCard key={image} image={image} index={index + 4} isMobile={isMobile} />
+              ))}
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

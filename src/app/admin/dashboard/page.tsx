@@ -32,6 +32,14 @@ export default function AdminDashboard() {
   });
   const [recentEnquiries, setRecentEnquiries] = useState<Enquiry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -86,10 +94,10 @@ export default function AdminDashboard() {
     <div>
       <h1 
         style={{
-          fontSize: '36px',
+          fontSize: isMobile ? '24px' : '36px',
           fontWeight: 600,
           color: '#5D5D5E',
-          marginBottom: '40px',
+          marginBottom: isMobile ? '24px' : '40px',
           fontFamily: "'Poppins', sans-serif"
         }}
       >
@@ -97,24 +105,25 @@ export default function AdminDashboard() {
       </h1>
 
       {/* Stats Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '20px', marginBottom: '40px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)', gap: isMobile ? '12px' : '20px', marginBottom: isMobile ? '24px' : '40px' }}>
         {statsList.map((stat, index) => (
           <div 
             key={index}
             style={{
               background: '#C1CDE2',
               borderRadius: '20px',
-              padding: '24px',
-              border: '1px solid #8E99AC'
+              padding: isMobile ? '16px' : '24px',
+              border: '1px solid #8E99AC',
+              gridColumn: isMobile && index === 4 ? 'span 2' : 'auto'
             }}
           >
             <div 
               style={{
-                fontSize: '48px',
+                fontSize: isMobile ? '32px' : '48px',
                 fontWeight: 700,
                 color: '#AB6430',
                 marginBottom: '8px',
-                lineHeight: '52px',
+                lineHeight: isMobile ? '36px' : '52px',
                 fontFamily: "'Poppins', sans-serif"
               }}
             >
@@ -122,7 +131,7 @@ export default function AdminDashboard() {
             </div>
             <div 
               style={{
-                fontSize: '14px',
+                fontSize: isMobile ? '12px' : '14px',
                 fontWeight: 500,
                 color: '#2F3E5A',
                 fontFamily: "'Poppins', sans-serif"
@@ -138,7 +147,7 @@ export default function AdminDashboard() {
       <div>
         <div 
           style={{
-            fontSize: '24px',
+            fontSize: isMobile ? '20px' : '24px',
             fontWeight: 600,
             color: '#2F3E5A',
             marginBottom: '20px',
@@ -151,7 +160,7 @@ export default function AdminDashboard() {
           style={{
             background: '#C1CDE2',
             borderRadius: '20px',
-            padding: '24px',
+            padding: isMobile ? '16px' : '24px',
             border: '1px solid #8E99AC'
           }}
         >
@@ -171,10 +180,12 @@ export default function AdminDashboard() {
                   style={{
                     background: '#BECCE5',
                     borderRadius: '12px',
-                    padding: '16px 20px',
+                    padding: isMobile ? '12px 16px' : '16px 20px',
                     display: 'flex',
+                    flexDirection: isMobile ? 'column' : 'row',
                     justifyContent: 'space-between',
-                    alignItems: 'flex-start'
+                    alignItems: isMobile ? 'flex-start' : 'center',
+                    gap: isMobile ? '8px' : '0'
                   }}
                 >
                   <div>
@@ -193,7 +204,7 @@ export default function AdminDashboard() {
                       color: '#5D5D5E', 
                       fontFamily: "'Poppins', sans-serif" 
                     }}>
-                      {enquiry.email} • {enquiry.phone}
+                      {enquiry.email} {isMobile ? <br/> : '•'} {enquiry.phone}
                     </p>
                     <p style={{ 
                       margin: '6px 0 0 0', 
@@ -206,7 +217,7 @@ export default function AdminDashboard() {
                        enquiry.properties?.title || 'Unknown'}
                     </p>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
+                  <div style={{ textAlign: isMobile ? 'left' : 'right', width: isMobile ? '100%' : 'auto', borderTop: isMobile ? '1px solid rgba(0,0,0,0.05)' : 'none', paddingTop: isMobile ? '8px' : '0' }}>
                     <p style={{ 
                       margin: 0, 
                       fontSize: '13px', 

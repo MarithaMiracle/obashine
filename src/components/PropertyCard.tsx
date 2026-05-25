@@ -26,38 +26,57 @@ export default function PropertyCard({
   bathrooms = 4,
 }: PropertyCardProps) {
   return (
-    <Link href={id ? `/property-details?id=${id}` : "/property-details"} style={{ textDecoration: 'none' }}>
-      <div style={{
-        background: "#fff", borderRadius: 20, overflow: "visible", boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        display: "flex", flexDirection: "column",
-      }}>
-        {/* Image area */}
-        <div style={{ position: "relative", height: 220, margin: 10, borderRadius: 10, overflow: "visible", flexShrink: 0 }}>
-          <Image
-            src={image}
-            alt={title}
-            fill
-            style={{ objectFit: "cover", borderRadius: 10 }}
-          />
-          <div style={{
-            position: "absolute", right: -12, top: -12, zIndex: 20,
-            width: 36, height: 36,
+    <>
+      <style>{`
+        @media (max-width: 768px) {
+          .prop-card { border-radius: 16px !important; }
+          .prop-card-img-wrap { height: 160px !important; margin: 8px !important; }
+          .prop-card-body { padding: 10px 14px 16px !important; }
+          .prop-card-type { font-size: 11px !important; }
+          .prop-card-location { font-size: 13px !important; }
+          .prop-card-price { font-size: 15px !important; margin-top: 6px !important; }
+          .prop-card-badge { width: 28px !important; height: 28px !important; right: -8px !important; top: -8px !important; }
+        }
+      `}</style>
+
+      <Link href={id ? `/property-details?id=${id}` : "/property-details"} style={{ textDecoration: 'none' }}>
+        <div className="prop-card" style={{
+          background: "#fff", borderRadius: 20, overflow: "visible",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+          display: "flex", flexDirection: "column",
+          position: "relative",
+        }}>
+          {/* Image area */}
+          <div className="prop-card-img-wrap" style={{
+            position: "relative", height: 220,
+            margin: 10, borderRadius: 10, overflow: "visible", flexShrink: 0,
           }}>
-            <img
-              src={verifiedBadgeUrl}
-              alt="Verified"
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            <Image
+              src={image}
+              alt={title}
+              fill
+              style={{ objectFit: "cover", borderRadius: 10 }}
             />
+            <div className="prop-card-badge" style={{
+              position: "absolute", right: -12, top: -12, zIndex: 20,
+              width: 36, height: 36,
+            }}>
+              <img
+                src={verifiedBadgeUrl}
+                alt="Verified"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+            </div>
+          </div>
+
+          {/* Text area */}
+          <div className="prop-card-body" style={{ padding: "12px 20px 20px", display: "flex", flexDirection: "column" }}>
+            <p className="prop-card-type" style={{ margin: 0, fontSize: 13, fontWeight: 500, color: "#8A8B8E", fontFamily: "'Poppins', sans-serif" }}>{type}</p>
+            <p className="prop-card-location" style={{ margin: "4px 0 0 0", fontSize: 15, fontWeight: 600, color: "#2F3E5A", fontFamily: "'Poppins', sans-serif" }}>{location}</p>
+            <p className="prop-card-price" style={{ margin: "8px 0 0 0", fontSize: 18, fontWeight: 700, color: "#AB6430", fontFamily: "'Poppins', sans-serif" }}>{price}</p>
           </div>
         </div>
-
-        {/* Text area */}
-        <div style={{ padding: "12px 20px 20px", display: "flex", flexDirection: "column" }}>
-          <p style={{ margin: 0, fontSize: 13, fontWeight: 500, color: "#8A8B8E", fontFamily: "'Poppins', sans-serif" }}>{type}</p>
-          <p style={{ margin: "4px 0 0 0", fontSize: 15, fontWeight: 600, color: "#2F3E5A", fontFamily: "'Poppins', sans-serif" }}>{location}</p>
-          <p style={{ margin: "8px 0 0 0", fontSize: 18, fontWeight: 700, color: "#AB6430", fontFamily: "'Poppins', sans-serif" }}>{price}</p>
-        </div>
-      </div>
-    </Link>
+      </Link>
+    </>
   );
 }

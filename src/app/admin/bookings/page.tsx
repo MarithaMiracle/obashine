@@ -23,6 +23,14 @@ export default function AdminBookings() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     fetchBookings();
@@ -88,13 +96,14 @@ export default function AdminBookings() {
   return (
     <div>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? '16px' : '0', marginBottom: '24px' }}>
         <h1 
           style={{
-            fontSize: '32px',
+            fontSize: isMobile ? '24px' : '32px',
             fontWeight: 600,
             color: '#5D5D5E',
-            fontFamily: "'Poppins', sans-serif"
+            fontFamily: "'Poppins', sans-serif",
+            margin: 0
           }}
         >
           INSPECTION BOOKINGS
@@ -110,7 +119,8 @@ export default function AdminBookings() {
             fontSize: '14px',
             fontWeight: 500,
             cursor: 'pointer',
-            fontFamily: "'Poppins', sans-serif"
+            fontFamily: "'Poppins', sans-serif",
+            width: isMobile ? '100%' : 'auto'
           }}
         >
           Refresh
@@ -120,7 +130,7 @@ export default function AdminBookings() {
       {/* Filters & Search */}
       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '24px', alignItems: 'center' }}>
         {/* Search */}
-        <div style={{ position: 'relative', flex: 1, maxWidth: '300px' }}>
+        <div style={{ position: 'relative', flex: isMobile ? '1 1 100%' : 1, maxWidth: isMobile ? '100%' : '300px' }}>
           <Search size={18} color="#5D5D5E" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"
@@ -146,6 +156,7 @@ export default function AdminBookings() {
           value={filterStatus}
           onChange={(e) => { setFilterStatus(e.target.value); setCurrentPage(1); }}
           style={{
+            flex: isMobile ? '1 1 100%' : 'none',
             padding: '12px 16px',
             borderRadius: '12px',
             border: 'none',
@@ -187,15 +198,15 @@ export default function AdminBookings() {
                 style={{
                   background: '#C1CDE2',
                   borderRadius: '16px',
-                  padding: '24px',
+                  padding: isMobile ? '16px' : '24px',
                   border: '1px solid #8E99AC'
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '24px' }}>
+                <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'stretch' : 'flex-start', gap: isMobile ? '16px' : '24px' }}>
                   <div style={{ flex: 1 }}>
                     <h3 style={{ 
                       margin: 0, 
-                      fontSize: '18px', 
+                      fontSize: isMobile ? '16px' : '18px', 
                       fontWeight: 600, 
                       color: '#2F3E5A', 
                       fontFamily: "'Poppins', sans-serif" 
@@ -204,15 +215,15 @@ export default function AdminBookings() {
                     </h3>
                     <p style={{ 
                       margin: '4px 0 0 0', 
-                      fontSize: '14px', 
+                      fontSize: isMobile ? '13px' : '14px', 
                       color: '#5D5D5E', 
                       fontFamily: "'Poppins', sans-serif" 
                     }}>
-                      {booking.email} • {booking.phone}
+                      {booking.email} {isMobile ? <br/> : '•'} {booking.phone}
                     </p>
                     <p style={{ 
                       margin: '8px 0 0 0', 
-                      fontSize: '14px', 
+                      fontSize: isMobile ? '13px' : '14px', 
                       color: '#2F3E5A', 
                       fontFamily: "'Poppins', sans-serif" 
                     }}>
@@ -220,7 +231,7 @@ export default function AdminBookings() {
                     </p>
                     <p style={{ 
                       margin: '8px 0 0 0', 
-                      fontSize: '14px', 
+                      fontSize: isMobile ? '13px' : '14px', 
                       color: '#5D5D5E', 
                       fontFamily: "'Poppins', sans-serif" 
                     }}>
@@ -228,10 +239,10 @@ export default function AdminBookings() {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
-                      })} • <strong>Time:</strong> {booking.preferred_time}
+                      })} <br/> <strong>Time:</strong> {booking.preferred_time}
                     </p>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
+                  <div style={{ textAlign: isMobile ? 'left' : 'right', borderTop: isMobile ? '1px solid rgba(0,0,0,0.05)' : 'none', paddingTop: isMobile ? '12px' : '0', display: isMobile ? 'flex' : 'block', justifyContent: isMobile ? 'space-between' : 'flex-end', alignItems: isMobile ? 'center' : 'flex-end' }}>
                     <span 
                       style={{
                         display: 'inline-block',
@@ -243,7 +254,7 @@ export default function AdminBookings() {
                         color: statusStyle.color,
                         textTransform: 'capitalize',
                         fontFamily: "'Poppins', sans-serif",
-                        marginBottom: '12px'
+                        marginBottom: isMobile ? '0' : '12px'
                       }}
                     >
                       {booking.status}
@@ -270,12 +281,12 @@ export default function AdminBookings() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginTop: '32px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: isMobile ? '8px' : '12px', marginTop: '32px', flexWrap: 'wrap' }}>
           <button
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
             style={{
-              padding: '10px 20px',
+              padding: isMobile ? '8px 12px' : '10px 20px',
               borderRadius: '8px',
               border: '1px solid #2F3E5A',
               background: currentPage === 1 ? '#f0f0f0' : '#fff',
@@ -286,41 +297,42 @@ export default function AdminBookings() {
               fontFamily: "'Poppins', sans-serif"
             }}
           >
-            Previous
+            Prev
           </button>
 
           {(() => {
             const pages = [];
-            const maxVisiblePages = 10;
+            const maxVisiblePages = isMobile ? 5 : 10;
             
             if (totalPages <= maxVisiblePages) {
-              // Show all pages if 10 or less
+              // Show all pages if small number
               for (let i = 1; i <= totalPages; i++) {
                 pages.push(i);
               }
             } else {
-              // Show first 2, current ± 3, last 2
-              const startPage = Math.max(1, currentPage - 3);
-              const endPage = Math.min(totalPages, currentPage + 3);
+              // Show first, current ± 1 (or 3), last
+              const visibleSiblings = isMobile ? 1 : 3;
+              const startPage = Math.max(1, currentPage - visibleSiblings);
+              const endPage = Math.min(totalPages, currentPage + visibleSiblings);
               
               if (startPage > 1) {
-                pages.push(1, 2, '...');
+                pages.push(1);
+                if (startPage > 2) pages.push('...');
               }
               
               for (let i = startPage; i <= endPage; i++) {
                 pages.push(i);
               }
               
-              if (endPage < totalPages - 1) {
-                pages.push('...', totalPages - 1, totalPages);
-              } else if (endPage < totalPages) {
+              if (endPage < totalPages) {
+                if (endPage < totalPages - 1) pages.push('...');
                 pages.push(totalPages);
               }
             }
             
             return pages.map((page, index) => (
               page === '...' ? (
-                <span key={`ellipsis-${index}`} style={{ padding: '0 8px', color: '#5D5D5E', fontSize: '14px', fontFamily: "'Poppins', sans-serif" }}>
+                <span key={`ellipsis-${index}`} style={{ padding: '0 4px', color: '#5D5D5E', fontSize: '14px', fontFamily: "'Poppins', sans-serif" }}>
                   ...
                 </span>
               ) : (
@@ -328,8 +340,8 @@ export default function AdminBookings() {
                   key={page}
                   onClick={() => setCurrentPage(page as number)}
                   style={{
-                    width: '40px',
-                    height: '40px',
+                    width: isMobile ? '32px' : '40px',
+                    height: isMobile ? '32px' : '40px',
                     borderRadius: '8px',
                     border: 'none',
                     background: currentPage === page ? '#2F3E5A' : '#f0f0f0',
@@ -350,7 +362,7 @@ export default function AdminBookings() {
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
             style={{
-              padding: '10px 20px',
+              padding: isMobile ? '8px 12px' : '10px 20px',
               borderRadius: '8px',
               border: '1px solid #2F3E5A',
               background: currentPage === totalPages ? '#f0f0f0' : '#fff',

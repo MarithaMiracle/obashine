@@ -65,6 +65,14 @@ const whyBuyItems = [
 export default function RentPage() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Auto slide every 5 seconds
   useEffect(() => {
@@ -86,7 +94,7 @@ export default function RentPage() {
       {/* Hero Section */}
       <section style={{
         width: "100%", margin: 0,
-        height: 443, position: "relative", borderRadius: 0, overflow: "hidden",
+        height: isMobile ? 380 : 443, position: "relative", borderRadius: 0, overflow: "hidden",
         display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center",
       }}>
         <Image
@@ -102,37 +110,37 @@ export default function RentPage() {
         }} />
 
         <div style={{
-          position: "relative", zIndex: 3, textAlign: "center", marginTop: 80,
+          position: "relative", zIndex: 3, textAlign: "center", marginTop: isMobile ? 60 : 80, padding: isMobile ? "0 16px" : 0
         }}>
           <h1 style={{
-            fontFamily: "'Poppins', sans-serif", fontSize: 64, fontWeight: 600,
-            color: "#fff", lineHeight: "29px",
+            fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 36 : 64, fontWeight: 600,
+            color: "#fff", lineHeight: isMobile ? "40px" : "29px",
             margin: 0,
           }}>
             Rent Properties
           </h1>
           <p style={{
-            fontFamily: "'Poppins', sans-serif", fontSize: 24, fontWeight: 300,
-            color: "#fff", lineHeight: "29px",
-            margin: "32px 0 0 0",
+            fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 16 : 24, fontWeight: 300,
+            color: "#fff", lineHeight: isMobile ? "24px" : "29px",
+            margin: isMobile ? "16px 0 0 0" : "32px 0 0 0",
           }}>
             Browse verified properties in your preferred location
           </p>
         </div>
 
         <div style={{ position: "relative", zIndex: 3, width: "100%", display: "flex", justifyContent: "center", alignItems: "center", paddingBottom: 24 }}>
-          <div style={{ width: "100%", maxWidth: 900, position: 'relative' }}>
-            <SearchAndFilter />
+          <div style={{ width: isMobile ? "calc(100% - 32px)" : "100%", maxWidth: 900, position: 'relative', boxSizing: "border-box" }}>
+            <SearchAndFilter page="rent" />
           </div>
         </div>
       </section>
 
       {/* Properties Available Section */}
-      <section style={{ maxWidth: 1062, margin: "60px auto 0", padding: "0 24px" }}>
+      <section style={{ maxWidth: 1062, margin: isMobile ? "40px auto 0" : "60px auto 0", padding: isMobile ? "0 16px" : "0 24px" }}>
         <h2 style={{
-          fontFamily: "'Poppins', sans-serif", fontSize: 48, fontWeight: 600,
-          color: "#AB6430", textAlign: "center", lineHeight: "47px",
-          margin: "0 0 48px 0",
+          fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 28 : 48, fontWeight: 600,
+          color: "#AB6430", textAlign: "center", lineHeight: isMobile ? "36px" : "47px",
+          margin: isMobile ? "0 0 32px 0" : "0 0 48px 0",
         }}>
           Properties Available for Rent
         </h2>
@@ -144,49 +152,49 @@ export default function RentPage() {
 
       {/* Why Rent With Us Section */}
       <section style={{
-        background: "#AB6430", padding: "89px 0",
+        background: "#AB6430", padding: isMobile ? "48px 0" : "89px 0",
         position: "relative", width: "100%", overflow: "hidden",
-        marginTop: 0,
+        marginTop: isMobile ? 40 : 0,
       }}>
-        <div style={{ maxWidth: 946, margin: "0 auto", padding: "0 24px" }}>
+        <div style={{ maxWidth: 946, margin: "0 auto", padding: isMobile ? "0 16px" : "0 24px" }}>
           <h2 style={{
-            fontFamily: "'Poppins', sans-serif", fontSize: 48, fontWeight: 600,
-            color: "#DEA674", textAlign: "center", lineHeight: "29px",
-            margin: "0 0 139px 0",
+            fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 32 : 48, fontWeight: 600,
+            color: "#DEA674", textAlign: "center", lineHeight: isMobile ? "40px" : "29px",
+            margin: isMobile ? "0 0 48px 0" : "0 0 139px 0",
           }}>
             Why Rent with Oba Shine
           </h2>
 
-          <div style={{ display: "flex", gap: 50, alignItems: "flex-start" }}>
-            <div style={{ flex: 1 }}>
+          <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: isMobile ? 32 : 50, alignItems: isMobile ? "center" : "flex-start" }}>
+            <div style={{ flex: 1, width: "100%" }}>
               {whyBuyItems.map((item, index) => (
                 <div key={index} style={{
-                  padding: "40px 0",
+                  padding: isMobile ? "24px 0" : "40px 0",
                   borderBottom: index < whyBuyItems.length - 1 ? "1px solid rgba(255,255,255,1)" : "none",
-                  display: "flex", gap: 24, alignItems: "center",
+                  display: "flex", gap: isMobile ? 16 : 24, alignItems: "flex-start",
                 }}>
                   <div style={{ flex: 1 }}>
                     <h3 style={{
-                      fontFamily: "'Poppins', sans-serif", fontSize: 24, fontWeight: 600,
-                      color: "#DEA674", textAlign: "left", lineHeight: "29px",
-                      margin: "0 0 17px 0",
+                      fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 20 : 24, fontWeight: 600,
+                      color: "#DEA674", textAlign: "left", lineHeight: isMobile ? "28px" : "29px",
+                      margin: "0 0 12px 0",
                     }}>
                       {item.title}
                     </h3>
                     <p style={{
-                      fontFamily: "'Poppins', sans-serif", fontSize: 16, fontWeight: 300,
-                      color: "#fff", textAlign: "left", lineHeight: "27px",
+                      fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 14 : 16, fontWeight: 300,
+                      color: "#fff", textAlign: "left", lineHeight: isMobile ? "24px" : "27px",
                       margin: 0,
                     }}>
                       {item.desc}
                     </p>
                   </div>
-                  <div style={{ flexShrink: 0, paddingTop: 10 }}>
+                  <div style={{ flexShrink: 0, paddingTop: 4 }}>
                     <Image
                       src={item.icon}
                       alt={item.title}
-                      width={70}
-                      height={70}
+                      width={isMobile ? 48 : 70}
+                      height={isMobile ? 48 : 70}
                       style={{ objectFit: "contain" }}
                     />
                   </div>
@@ -194,7 +202,7 @@ export default function RentPage() {
               ))}
             </div>
 
-            <div style={{ width: 380, flexShrink: 0 }}>
+            <div style={{ width: isMobile ? "100%" : 380, flexShrink: 0, display: isMobile ? "none" : "block" }}>
               <div style={{ position: "relative", height: 874, overflow: "hidden" }}>
                 <Image
                   src={`${mediaBase}/6e5c5f40c02f94f3d6e1d2592282a4444a69cf0c15cf2caeac881ff32fec7b97.png`}
@@ -210,7 +218,7 @@ export default function RentPage() {
 
       {/* Featured Property Banner */}
       <section style={{
-        width: "100%", height: 750, position: "relative", marginTop: 0,
+        width: "100%", height: isMobile ? 400 : 750, position: "relative", marginTop: 0,
         overflow: "hidden",
       }}>
           {featuredProperties.map((prop, index) => (
@@ -232,22 +240,23 @@ export default function RentPage() {
             </div>
           ))}
 
-          <div style={{ position: "absolute", left: 136, bottom: 139, zIndex: 10 }}>
+          <div style={{ position: "absolute", left: isMobile ? 24 : 136, bottom: isMobile ? 40 : 139, zIndex: 10, right: isMobile ? 24 : "auto" }}>
             <p style={{
-              fontFamily: "'Poppins', sans-serif", fontSize: 36, fontWeight: 500,
-              color: "#fbfbfb", margin: "0 0 16px 0",
+              fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 20 : 36, fontWeight: 500,
+              color: "#fbfbfb", margin: isMobile ? "0 0 8px 0" : "0 0 16px 0",
             }}>
               Price
             </p>
             <p style={{
-              fontFamily: "'Poppins', sans-serif", fontSize: 64, fontWeight: 700,
-              color: "#C5D7FA", margin: "0 0 16px 0",
+              fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 36 : 64, fontWeight: 700,
+              color: "#C5D7FA", margin: isMobile ? "0 0 8px 0" : "0 0 16px 0",
             }}>
               {currentFeatured.price}
             </p>
             <p style={{
-              fontFamily: "'Poppins', sans-serif", fontSize: 36, fontWeight: 500,
+              fontFamily: "'Poppins', sans-serif", fontSize: isMobile ? 20 : 36, fontWeight: 500,
               color: "#fbfbfb", margin: 0,
+              lineHeight: isMobile ? "28px" : "normal"
             }}>
               {currentFeatured.type}<br />{currentFeatured.location}
             </p>
@@ -255,10 +264,10 @@ export default function RentPage() {
 
           <div
             onClick={handleNextSlide}
-            style={{ position: "absolute", right: 192, bottom: 139, zIndex: 10, cursor: "pointer" }}
+            style={{ position: "absolute", right: isMobile ? 24 : 192, bottom: isMobile ? 40 : 139, zIndex: 10, cursor: "pointer" }}
           >
             <div style={{
-              width: 51, height: 51,
+              width: isMobile ? 40 : 51, height: isMobile ? 40 : 51,
               backgroundImage: `url(${mediaBase}/3add21520b47ded3fd75e6fc03882ca143529d9547bf3b0385222a4034d0e9af.png)`,
               backgroundSize: "100% 100%",
               backgroundRepeat: "no-repeat",

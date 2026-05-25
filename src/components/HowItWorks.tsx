@@ -1,5 +1,7 @@
 "use client";
 
+import { useMediaQuery } from "@/lib/utils";
+
 const mediaBase =
   "https://brxpjwtisajinfhbqchs.supabase.co/storage/v1/object/public/main/media";
 
@@ -33,82 +35,124 @@ const textBox: React.CSSProperties = {
   padding: "22px 24px 28px",
 };
 
-const imgStyle: React.CSSProperties = {
+const imgStyle = (isMobile: boolean): React.CSSProperties => ({
   width: "100%",
-  height: 260,
+  height: isMobile ? 200 : 260,
   objectFit: "cover",
+  objectPosition: "center",
   display: "block",
+});
+
+const mobileTextBox: React.CSSProperties = {
+  ...textBox,
+  borderRadius: "0 0 16px 16px",
+  padding: "16px 16px 20px",
+};
+
+const mobileImageBox: React.CSSProperties = {
+  borderRadius: "16px 16px 0 0",
+  overflow: "hidden",
+  background: "#F2F6FF",
 };
 
 export default function HowItWorks() {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   return (
-    <section style={{ background: "#2F3E5A", padding: "80px 24px 100px", color: "#fff" }}>
+    <section style={{
+      background: "#2F3E5A",
+      padding: isMobile ? "48px 16px 60px" : "80px 24px 100px",
+      color: "#fff",
+    }}>
       <div style={{ maxWidth: 920, margin: "0 auto" }}>
-        <h2
-          style={{
-            textAlign: "center",
-            fontSize: 50,
-            fontWeight: 700,
-            lineHeight: 1.1,
-            margin: "0 0 56px",
-          }}
-        >
+        <h2 style={{
+          textAlign: "center",
+          fontSize: isMobile ? 32 : 50,
+          fontWeight: 700,
+          lineHeight: 1.1,
+          margin: isMobile ? "0 0 32px" : "0 0 56px",
+        }}>
           How It Works
         </h2>
 
-        <div
-          style={{
+        {isMobile ? (
+          /* ── Mobile: alternating layout to match desktop ── */
+          <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+            {/* Step 1: Browse - Image Top, Text Bottom */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={imageBox}>
+                <img src={steps[0].image} alt="Browse" style={imgStyle(true)} />
+              </div>
+              <div style={textBox}>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2F3E5A", margin: 0 }}>{steps[0].title}</h3>
+                <p style={{ fontSize: 13, fontWeight: 500, lineHeight: "18px", color: "#8A8B8E", margin: "8px 0 0" }}>{steps[0].description}</p>
+              </div>
+            </div>
+
+            {/* Step 2: Connect - Text Top, Image Bottom */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={textBox}>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2F3E5A", margin: 0 }}>{steps[1].title}</h3>
+                <p style={{ fontSize: 13, fontWeight: 500, lineHeight: "18px", color: "#8A8B8E", margin: "8px 0 0" }}>{steps[1].description}</p>
+              </div>
+              <div style={imageBox}>
+                <img src={steps[1].image} alt="Connect" style={imgStyle(true)} />
+              </div>
+            </div>
+
+            {/* Step 3: Secure - Image Top, Text Bottom */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={imageBox}>
+                <img src={steps[2].image} alt="Secure" style={imgStyle(true)} />
+              </div>
+              <div style={textBox}>
+                <h3 style={{ fontSize: 18, fontWeight: 700, color: "#2F3E5A", margin: 0 }}>{steps[2].title}</h3>
+                <p style={{ fontSize: 13, fontWeight: 500, lineHeight: "18px", color: "#8A8B8E", margin: "8px 0 0" }}>{steps[2].description}</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* ── Desktop: original three-column alternating layout ── */
+          <div style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr 1fr",
             gap: 16,
             alignItems: "start",
-          }}
-        >
-          {/* COL 1: Browse — image box top, text box bottom */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <div style={imageBox}>
-              <img src={steps[0].image} alt="Browse" style={imgStyle} />
+          }}>
+            {/* COL 1: Browse — image top, text bottom */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={imageBox}>
+                <img src={steps[0].image} alt="Browse" style={imgStyle(false)} />
+              </div>
+              <div style={textBox}>
+                <h3 style={{ fontSize: 21, fontWeight: 700, color: "#2F3E5A", margin: 0 }}>{steps[0].title}</h3>
+                <p style={{ fontSize: 13, fontWeight: 500, lineHeight: "18px", color: "#8A8B8E", margin: "8px 0 0" }}>{steps[0].description}</p>
+              </div>
             </div>
-            <div style={textBox}>
-              <h3 style={{ fontSize: 21, fontWeight: 700, color: "#2F3E5A", margin: 0 }}>
-                {steps[0].title}
-              </h3>
-              <p style={{ fontSize: 13, fontWeight: 500, lineHeight: "18px", color: "#8A8B8E", margin: "8px 0 0" }}>
-                {steps[0].description}
-              </p>
-            </div>
-          </div>
 
-          {/* COL 2: Connect — text box top, image box bottom */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <div style={textBox}>
-              <h3 style={{ fontSize: 21, fontWeight: 700, color: "#2F3E5A", margin: 0 }}>
-                {steps[1].title}
-              </h3>
-              <p style={{ fontSize: 13, fontWeight: 500, lineHeight: "18px", color: "#8A8B8E", margin: "8px 0 0" }}>
-                {steps[1].description}
-              </p>
+            {/* COL 2: Connect — text top, image bottom */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={textBox}>
+                <h3 style={{ fontSize: 21, fontWeight: 700, color: "#2F3E5A", margin: 0 }}>{steps[1].title}</h3>
+                <p style={{ fontSize: 13, fontWeight: 500, lineHeight: "18px", color: "#8A8B8E", margin: "8px 0 0" }}>{steps[1].description}</p>
+              </div>
+              <div style={imageBox}>
+                <img src={steps[1].image} alt="Connect" style={imgStyle(false)} />
+              </div>
             </div>
-            <div style={imageBox}>
-              <img src={steps[1].image} alt="Connect" style={imgStyle} />
-            </div>
-          </div>
 
-          {/* COL 3: Secure — image box top, text box bottom */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <div style={imageBox}>
-              <img src={steps[2].image} alt="Secure" style={imgStyle} />
-            </div>
-            <div style={textBox}>
-              <h3 style={{ fontSize: 21, fontWeight: 700, color: "#2F3E5A", margin: 0 }}>
-                {steps[2].title}
-              </h3>
-              <p style={{ fontSize: 13, fontWeight: 500, lineHeight: "18px", color: "#8A8B8E", margin: "8px 0 0" }}>
-                {steps[2].description}
-              </p>
+            {/* COL 3: Secure — image top, text bottom */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={imageBox}>
+                <img src={steps[2].image} alt="Secure" style={imgStyle(false)} />
+              </div>
+              <div style={textBox}>
+                <h3 style={{ fontSize: 21, fontWeight: 700, color: "#2F3E5A", margin: 0 }}>{steps[2].title}</h3>
+                <p style={{ fontSize: 13, fontWeight: 500, lineHeight: "18px", color: "#8A8B8E", margin: "8px 0 0" }}>{steps[2].description}</p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

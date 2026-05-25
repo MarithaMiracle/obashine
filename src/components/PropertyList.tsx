@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { useMediaQuery } from '@/lib/utils';
 import PropertyCard from './PropertyCard';
 
 interface PropertyListProps {
@@ -17,6 +18,7 @@ export default function PropertyList({ type, limit, itemsPerPage = 6 }: Property
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     fetchProperties();
@@ -116,7 +118,7 @@ export default function PropertyList({ type, limit, itemsPerPage = 6 }: Property
 
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '32px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? '16px' : '32px' }}>
         {currentItems.map((property) => (
           <PropertyCard
             key={property.id}
@@ -134,19 +136,19 @@ export default function PropertyList({ type, limit, itemsPerPage = 6 }: Property
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginTop: '48px', paddingBottom: '40px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: isMobile ? '8px' : '12px', marginTop: isMobile ? '32px' : '48px', paddingBottom: '40px', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
           <button
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
             style={{
-              padding: '10px 20px', borderRadius: '8px', border: '1px solid #2F3E5A',
+              padding: isMobile ? '8px 12px' : '10px 20px', borderRadius: '8px', border: '1px solid #2F3E5A',
               background: currentPage === 1 ? '#f0f0f0' : '#fff',
               color: currentPage === 1 ? '#999' : '#2F3E5A',
               cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-              fontSize: '14px', fontWeight: 500, fontFamily: "'Poppins', sans-serif",
+              fontSize: isMobile ? '13px' : '14px', fontWeight: 500, fontFamily: "'Poppins', sans-serif",
             }}
           >
-            Previous
+            Prev
           </button>
 
           {(() => {
@@ -188,14 +190,14 @@ export default function PropertyList({ type, limit, itemsPerPage = 6 }: Property
                   key={page}
                   onClick={() => setCurrentPage(page as number)}
                   style={{
-                    width: '40px',
-                    height: '40px',
+                    width: isMobile ? '32px' : '40px',
+                    height: isMobile ? '32px' : '40px',
                     borderRadius: '8px',
                     border: 'none',
                     background: currentPage === page ? '#2F3E5A' : '#f0f0f0',
                     color: currentPage === page ? '#fff' : '#2F3E5A',
                     cursor: 'pointer',
-                    fontSize: '14px',
+                    fontSize: isMobile ? '13px' : '14px',
                     fontWeight: 500,
                     fontFamily: "'Poppins', sans-serif"
                   }}
@@ -210,11 +212,11 @@ export default function PropertyList({ type, limit, itemsPerPage = 6 }: Property
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
             style={{
-              padding: '10px 20px', borderRadius: '8px', border: '1px solid #2F3E5A',
+              padding: isMobile ? '8px 12px' : '10px 20px', borderRadius: '8px', border: '1px solid #2F3E5A',
               background: currentPage === totalPages ? '#f0f0f0' : '#fff',
               color: currentPage === totalPages ? '#999' : '#2F3E5A',
               cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-              fontSize: '14px', fontWeight: 500, fontFamily: "'Poppins', sans-serif",
+              fontSize: isMobile ? '13px' : '14px', fontWeight: 500, fontFamily: "'Poppins', sans-serif",
             }}
           >
             Next

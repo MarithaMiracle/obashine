@@ -31,6 +31,19 @@ export default function AdminLayout({
   const router = useRouter();
   const [adminUser, setAdminUser] = useState<{ email: string; name?: string } | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+      if (window.innerWidth > 768) {
+        setIsSidebarOpen(false);
+      }
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const navItems: NavItem[] = [
     { 
@@ -135,17 +148,45 @@ export default function AdminLayout({
         }}
       />
 
+      {/* Mobile Overlay */}
+      {isMobile && isSidebarOpen && (
+        <div 
+          onClick={() => setIsSidebarOpen(false)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 40
+          }}
+        />
+      )}
+
       {/* Sidebar */}
       <div 
         style={{
           width: '280px',
-          position: 'relative',
-          zIndex: 1,
+          position: isMobile ? 'fixed' : 'relative',
+          top: 0, left: 0, bottom: 0,
+          zIndex: 50,
+          background: isMobile ? '#2F3E5A' : 'transparent',
           padding: '32px 20px',
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          transform: isMobile ? (isSidebarOpen ? 'translateX(0)' : 'translateX(-100%)') : 'none',
+          transition: 'transform 0.3s ease-in-out',
+          boxShadow: isMobile && isSidebarOpen ? '4px 0 24px rgba(0,0,0,0.3)' : 'none'
         }}
       >
+        {/* Mobile Close Button */}
+        {isMobile && (
+          <button 
+            onClick={() => setIsSidebarOpen(false)}
+            style={{
+              position: 'absolute', top: 20, right: 20,
+              background: 'none', border: 'none', color: '#fff', cursor: 'pointer'
+            }}
+          >
+            <X size={24} />
+          </button>
+        )}
+
         {/* Logo */}
         <div style={{ marginBottom: '24px', padding: '0 10px' }}>
           <img 
@@ -171,7 +212,10 @@ export default function AdminLayout({
             return (
               <button
                 key={item.path}
-                onClick={() => router.push(item.path)}
+                onClick={() => {
+                  router.push(item.path);
+                  if (isMobile) setIsSidebarOpen(false);
+                }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -230,7 +274,9 @@ export default function AdminLayout({
         flex: 1, 
         position: 'relative', 
         zIndex: 1, 
-        padding: '32px 32px 32px 0' 
+        padding: isMobile ? '16px' : '32px 32px 32px 0',
+        width: isMobile ? '100%' : 'auto',
+        boxSizing: 'border-box'
       }}>
         {/* Header */}
         <div 
@@ -239,11 +285,22 @@ export default function AdminLayout({
             justifyContent: 'space-between',
             alignItems: 'center',
             marginBottom: '32px',
-            paddingRight: '32px'
+            paddingRight: isMobile ? '0' : '32px'
           }}
         >
-          <div />
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          {isMobile ? (
+            <button 
+              onClick={() => setIsSidebarOpen(true)}
+              style={{
+                background: 'rgba(209, 218, 234, 0.2)', border: 'none',
+                borderRadius: '8px', padding: '8px', color: '#fff', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}
+            >
+              <Menu size={24} />
+            </button>
+          ) : <div />}
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '12px' : '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div 
                 style={{
@@ -269,16 +326,18 @@ export default function AdminLayout({
                 >
                   {adminUser?.name || 'Admin'}
                 </span>
-                <span 
-                  style={{
-                    fontSize: '12px',
-                    fontWeight: 400,
-                    color: 'rgba(209, 218, 234, 0.7)',
-                    fontFamily: "'Poppins', sans-serif"
-                  }}
-                >
-                  {adminUser?.email || ''}
-                </span>
+                {!isMobile && (
+                  <span 
+                    style={{
+                      fontSize: '12px',
+                      fontWeight: 400,
+                      color: 'rgba(209, 218, 234, 0.7)',
+                      fontFamily: "'Poppins', sans-serif"
+                    }}
+                  >
+                    {adminUser?.email || ''}
+                  </span>
+                )}
               </div>
             </div>
             <button
@@ -293,7 +352,7 @@ export default function AdminLayout({
                 background: 'transparent',
                 border: '1px solid rgba(209, 218, 234, 0.3)',
                 borderRadius: '12px',
-                padding: '10px 20px',
+                padding: isMobile ? '8px' : '10px 20px',
                 cursor: 'pointer',
                 fontFamily: "'Poppins', sans-serif",
                 transition: 'all 0.2s ease'
@@ -306,7 +365,7 @@ export default function AdminLayout({
               }}
             >
               <LogOut size={18} />
-              Logout
+              {!isMobile && 'Logout'}
             </button>
           </div>
         </div>
@@ -316,10 +375,11 @@ export default function AdminLayout({
           style={{
             background: '#D1DAEA',
             borderRadius: '24px',
-            padding: '32px',
-            marginLeft: '32px',
+            padding: isMobile ? '20px' : '32px',
+            marginLeft: isMobile ? '0' : '32px',
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-            minHeight: 'calc(100vh - 140px)'
+            minHeight: 'calc(100vh - 140px)',
+            overflowX: 'hidden'
           }}
         >
           {children}

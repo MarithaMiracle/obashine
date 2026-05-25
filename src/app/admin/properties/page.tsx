@@ -31,6 +31,7 @@ export default function AdminProperties() {
   const [showForm, setShowForm] = useState(false);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -47,6 +48,11 @@ export default function AdminProperties() {
 
   useEffect(() => {
     fetchProperties();
+
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   const fetchProperties = async () => {
@@ -214,13 +220,14 @@ export default function AdminProperties() {
   return (
     <div>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? '16px' : '0', marginBottom: '24px' }}>
         <h1 
           style={{
-            fontSize: '32px',
+            fontSize: isMobile ? '24px' : '32px',
             fontWeight: 600,
             color: '#5D5D5E',
-            fontFamily: "'Poppins', sans-serif"
+            fontFamily: "'Poppins', sans-serif",
+            margin: 0
           }}
         >
           PROPERTY MANAGEMENT
@@ -239,7 +246,9 @@ export default function AdminProperties() {
             fontSize: '14px',
             fontWeight: 600,
             cursor: 'pointer',
-            fontFamily: "'Poppins', sans-serif"
+            fontFamily: "'Poppins', sans-serif",
+            width: isMobile ? '100%' : 'auto',
+            justifyContent: 'center'
           }}
         >
           <Plus size={18} />
@@ -250,7 +259,7 @@ export default function AdminProperties() {
       {/* Filters & Search */}
       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '24px', alignItems: 'center' }}>
         {/* Search */}
-        <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
+        <div style={{ position: 'relative', flex: isMobile ? '1 1 100%' : 1, maxWidth: isMobile ? '100%' : '400px' }}>
           <Search size={18} color="#5D5D5E" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"
@@ -276,6 +285,7 @@ export default function AdminProperties() {
           value={filterType}
           onChange={(e) => { setFilterType(e.target.value); setCurrentPage(1); }}
           style={{
+            flex: isMobile ? '1 1 calc(50% - 6px)' : 'none',
             padding: '12px 16px',
             borderRadius: '12px',
             border: 'none',
@@ -295,6 +305,7 @@ export default function AdminProperties() {
           value={filterStatus}
           onChange={(e) => { setFilterStatus(e.target.value); setCurrentPage(1); }}
           style={{
+            flex: isMobile ? '1 1 calc(50% - 6px)' : 'none',
             padding: '12px 16px',
             borderRadius: '12px',
             border: 'none',
@@ -314,6 +325,7 @@ export default function AdminProperties() {
         <button
           onClick={fetchProperties}
           style={{
+            flex: isMobile ? '1 1 100%' : 'none',
             padding: '12px 20px',
             borderRadius: '12px',
             background: '#485B7E',
@@ -335,16 +347,16 @@ export default function AdminProperties() {
           style={{
             background: '#C1CDE2',
             borderRadius: '20px',
-            padding: '32px',
+            padding: isMobile ? '20px' : '32px',
             marginBottom: '32px',
             border: '1px solid #8E99AC'
           }}
         >
-          <h2 style={{ fontSize: '24px', fontWeight: 600, color: '#2F3E5A', marginBottom: '24px', fontFamily: "'Poppins', sans-serif" }}>
+          <h2 style={{ fontSize: isMobile ? '20px' : '24px', fontWeight: 600, color: '#2F3E5A', marginBottom: '24px', fontFamily: "'Poppins', sans-serif" }}>
             {editingProperty ? 'Edit Property' : 'Add New Property'}
           </h2>
-          <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
-            <div style={{ gridColumn: 'span 2' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: '24px' }}>
+            <div style={{ gridColumn: isMobile ? '1' : 'span 2' }}>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: '#2F3E5A', marginBottom: '8px', fontFamily: "'Poppins', sans-serif" }}>
                 Property Title
               </label>
@@ -367,7 +379,7 @@ export default function AdminProperties() {
               />
             </div>
 
-            <div style={{ gridColumn: 'span 2' }}>
+            <div style={{ gridColumn: isMobile ? '1' : 'span 2' }}>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: '#2F3E5A', marginBottom: '8px', fontFamily: "'Poppins', sans-serif" }}>
                 Description
               </label>
@@ -553,7 +565,7 @@ export default function AdminProperties() {
             </div>
 
             {/* Image Upload */}
-            <div style={{ gridColumn: 'span 2' }}>
+            <div style={{ gridColumn: isMobile ? '1' : 'span 2' }}>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: 500, color: '#2F3E5A', marginBottom: '12px', fontFamily: "'Poppins', sans-serif" }}>
                 Property Images (Up to 5)
               </label>
@@ -625,11 +637,12 @@ export default function AdminProperties() {
               )}
             </div>
 
-            <div style={{ gridColumn: 'span 2' }}>
+            <div style={{ gridColumn: isMobile ? '1' : 'span 2' }}>
               <button
                 type="submit"
                 disabled={uploading}
                 style={{
+                  width: isMobile ? '100%' : 'auto',
                   padding: '14px 32px',
                   borderRadius: '12px',
                   background: '#AB6430',
@@ -673,10 +686,12 @@ export default function AdminProperties() {
               style={{
                 background: '#C1CDE2',
                 borderRadius: '16px',
-                padding: '20px 24px',
+                padding: isMobile ? '16px' : '20px 24px',
                 display: 'flex',
+                flexDirection: isMobile ? 'column' : 'row',
                 justifyContent: 'space-between',
-                alignItems: 'center',
+                alignItems: isMobile ? 'stretch' : 'center',
+                gap: isMobile ? '16px' : '0',
                 border: '1px solid #8E99AC'
               }}
             >
@@ -691,23 +706,24 @@ export default function AdminProperties() {
                     backgroundPosition: 'center',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    flexShrink: 0
                   }}
                 >
                   {!property.images?.[0] && <ImageIcon size={32} color="#8E99AC" />}
                 </div>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600, color: '#2F3E5A', fontFamily: "'Poppins', sans-serif" }}>
+                  <h3 style={{ margin: 0, fontSize: isMobile ? '16px' : '18px', fontWeight: 600, color: '#2F3E5A', fontFamily: "'Poppins', sans-serif" }}>
                     {property.title}
                   </h3>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '14px', color: '#5D5D5E', fontFamily: "'Poppins', sans-serif" }}>
+                  <p style={{ margin: '4px 0 0 0', fontSize: isMobile ? '13px' : '14px', color: '#5D5D5E', fontFamily: "'Poppins', sans-serif" }}>
                     {property.location}
                   </p>
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <div style={{ textAlign: 'right' }}>
-                  <p style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: '#AB6430', fontFamily: "'Poppins', sans-serif" }}>
+              <div style={{ display: 'flex', alignItems: isMobile ? 'center' : 'center', justifyContent: isMobile ? 'space-between' : 'flex-end', gap: '20px', borderTop: isMobile ? '1px solid rgba(0,0,0,0.05)' : 'none', paddingTop: isMobile ? '12px' : '0' }}>
+                <div style={{ textAlign: isMobile ? 'left' : 'right' }}>
+                  <p style={{ margin: 0, fontSize: isMobile ? '18px' : '20px', fontWeight: 700, color: '#AB6430', fontFamily: "'Poppins', sans-serif" }}>
                     ₦{Number(property.price).toLocaleString()}
                   </p>
                   <span 
@@ -719,7 +735,8 @@ export default function AdminProperties() {
                       fontWeight: 500,
                       background: property.is_active ? '#E8F5E9' : '#FFF3E0',
                       color: property.is_active ? '#2E7D32' : '#E65100',
-                      fontFamily: "'Poppins', sans-serif"
+                      fontFamily: "'Poppins', sans-serif",
+                      marginTop: isMobile ? '4px' : '0'
                     }}
                   >
                     {property.is_active ? 'Active' : property.status}
@@ -767,12 +784,12 @@ export default function AdminProperties() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginTop: '32px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: isMobile ? '8px' : '12px', marginTop: '32px', flexWrap: 'wrap' }}>
           <button
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
             style={{
-              padding: '10px 20px',
+              padding: isMobile ? '8px 12px' : '10px 20px',
               borderRadius: '8px',
               border: '1px solid #2F3E5A',
               background: currentPage === 1 ? '#f0f0f0' : '#fff',
@@ -783,41 +800,42 @@ export default function AdminProperties() {
               fontFamily: "'Poppins', sans-serif"
             }}
           >
-            Previous
+            Prev
           </button>
 
           {(() => {
             const pages = [];
-            const maxVisiblePages = 10;
+            const maxVisiblePages = isMobile ? 5 : 10;
             
             if (totalPages <= maxVisiblePages) {
-              // Show all pages if 10 or less
+              // Show all pages if small number
               for (let i = 1; i <= totalPages; i++) {
                 pages.push(i);
               }
             } else {
-              // Show first 2, current ± 3, last 2
-              const startPage = Math.max(1, currentPage - 3);
-              const endPage = Math.min(totalPages, currentPage + 3);
+              // Show first, current ± 1 (or 3), last
+              const visibleSiblings = isMobile ? 1 : 3;
+              const startPage = Math.max(1, currentPage - visibleSiblings);
+              const endPage = Math.min(totalPages, currentPage + visibleSiblings);
               
               if (startPage > 1) {
-                pages.push(1, 2, '...');
+                pages.push(1);
+                if (startPage > 2) pages.push('...');
               }
               
               for (let i = startPage; i <= endPage; i++) {
                 pages.push(i);
               }
               
-              if (endPage < totalPages - 1) {
-                pages.push('...', totalPages - 1, totalPages);
-              } else if (endPage < totalPages) {
+              if (endPage < totalPages) {
+                if (endPage < totalPages - 1) pages.push('...');
                 pages.push(totalPages);
               }
             }
             
             return pages.map((page, index) => (
               page === '...' ? (
-                <span key={`ellipsis-${index}`} style={{ padding: '0 8px', color: '#5D5D5E', fontSize: '14px', fontFamily: "'Poppins', sans-serif" }}>
+                <span key={`ellipsis-${index}`} style={{ padding: '0 4px', color: '#5D5D5E', fontSize: '14px', fontFamily: "'Poppins', sans-serif" }}>
                   ...
                 </span>
               ) : (
@@ -825,8 +843,8 @@ export default function AdminProperties() {
                   key={page}
                   onClick={() => setCurrentPage(page as number)}
                   style={{
-                    width: '40px',
-                    height: '40px',
+                    width: isMobile ? '32px' : '40px',
+                    height: isMobile ? '32px' : '40px',
                     borderRadius: '8px',
                     border: 'none',
                     background: currentPage === page ? '#2F3E5A' : '#f0f0f0',
@@ -847,7 +865,7 @@ export default function AdminProperties() {
             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
             style={{
-              padding: '10px 20px',
+              padding: isMobile ? '8px 12px' : '10px 20px',
               borderRadius: '8px',
               border: '1px solid #2F3E5A',
               background: currentPage === totalPages ? '#f0f0f0' : '#fff',
