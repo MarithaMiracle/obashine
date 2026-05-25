@@ -44,13 +44,14 @@ export default function SearchAndFilter({ variant = 'hero', page = 'buy' }: Sear
 
   const selectStyle: React.CSSProperties = {
     width: "100%",
-    padding: "10px 12px",
+    padding: isMobile ? "8px 12px" : "10px 12px",
     borderRadius: 8,
     border: "1px solid #e5e7eb",
     background: "white",
     fontSize: 14,
     color: "#2F3E5A",
     outline: "none",
+    boxSizing: "border-box",
   };
 
   const labelStyle: React.CSSProperties = {
@@ -58,7 +59,7 @@ export default function SearchAndFilter({ variant = 'hero', page = 'buy' }: Sear
     fontSize: 13,
     fontWeight: 600,
     color: "#4F5E7B",
-    marginBottom: 8,
+    marginBottom: isMobile ? 4 : 8,
   };
 
   // Panel position: bottom sheet on mobile, centred modal on desktop
@@ -73,12 +74,13 @@ export default function SearchAndFilter({ variant = 'hero', page = 'buy' }: Sear
         zIndex: 9999,
         background: "white",
         borderRadius: "20px 20px 0 0",
-        padding: "20px 20px 40px",
+        padding: "16px 16px 24px",
         boxShadow: "0 -4px 32px rgba(0,0,0,0.18)",
-        maxHeight: "85vh",
+        maxHeight: "75vh",
         overflowY: "auto",
         border: "none",
         width: "100%",
+        boxSizing: "border-box",
       }
     : {
         position: "fixed",
@@ -169,7 +171,7 @@ export default function SearchAndFilter({ variant = 'hero', page = 'buy' }: Sear
           {/* Listing Type */}
           <div style={{ marginBottom: 16 }}>
             <label style={labelStyle}>Listing Type</label>
-            <div style={{ display: "flex", gap: 8 }}>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {(['all', 'sale', 'rent'] as const).map((t) => (
                 <button
                   key={t}
@@ -214,36 +216,36 @@ export default function SearchAndFilter({ variant = 'hero', page = 'buy' }: Sear
             </select>
           </div>
 
-          {/* Bedrooms */}
-          <div style={{ marginBottom: 16 }}>
-            <label style={labelStyle}>Bedrooms</label>
-            <select value={filters.bedrooms} onChange={(e) => setFilters({ ...filters, bedrooms: e.target.value })} style={{ ...selectStyle, fontSize: isMobile ? 16 : 14 }}>
-              <option value="">Any</option>
-              <option value="1">1 Bedroom</option>
-              <option value="2">2 Bedrooms</option>
-              <option value="3">3 Bedrooms</option>
-              <option value="4">4 Bedrooms</option>
-              <option value="5+">5+ Bedrooms</option>
-            </select>
-          </div>
-
-          {/* Bathrooms */}
-          <div style={{ marginBottom: 20 }}>
-            <label style={labelStyle}>Bathrooms</label>
-            <select value={filters.bathrooms} onChange={(e) => setFilters({ ...filters, bathrooms: e.target.value })} style={{ ...selectStyle, fontSize: isMobile ? 16 : 14 }}>
-              <option value="">Any</option>
-              <option value="1">1 Bathroom</option>
-              <option value="2">2 Bathrooms</option>
-              <option value="3">3 Bathrooms</option>
-              <option value="4+">4+ Bathrooms</option>
-            </select>
+          {/* Bedrooms and Bathrooms */}
+          <div style={{ display: "flex", gap: 12, marginBottom: isMobile ? 16 : 20 }}>
+            <div style={{ flex: 1 }}>
+              <label style={labelStyle}>Bedrooms</label>
+              <select value={filters.bedrooms} onChange={(e) => setFilters({ ...filters, bedrooms: e.target.value })} style={{ ...selectStyle, fontSize: isMobile ? 16 : 14 }}>
+                <option value="">Any</option>
+                <option value="1">1 Bed</option>
+                <option value="2">2 Beds</option>
+                <option value="3">3 Beds</option>
+                <option value="4">4 Beds</option>
+                <option value="5+">5+ Beds</option>
+              </select>
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={labelStyle}>Bathrooms</label>
+              <select value={filters.bathrooms} onChange={(e) => setFilters({ ...filters, bathrooms: e.target.value })} style={{ ...selectStyle, fontSize: isMobile ? 16 : 14 }}>
+                <option value="">Any</option>
+                <option value="1">1 Bath</option>
+                <option value="2">2 Baths</option>
+                <option value="3">3 Baths</option>
+                <option value="4+">4+ Baths</option>
+              </select>
+            </div>
           </div>
 
           {/* Apply */}
           <button
             onClick={() => { handleSearch(); setShowFilters(false); }}
             style={{
-              width: "100%", padding: "12px 24px",
+              width: "100%", padding: isMobile ? "10px 24px" : "12px 24px",
               background: "#AB6430", color: "white",
               border: "none", borderRadius: 999,
               fontSize: 16, fontWeight: 600, cursor: "pointer",
@@ -256,36 +258,39 @@ export default function SearchAndFilter({ variant = 'hero', page = 'buy' }: Sear
 
       {/* Search box */}
       <div style={{
-        borderRadius: isMobile ? 20 : (isHero ? 36 : 16),
+        borderRadius: isMobile ? 16 : (isHero ? 36 : 16),
         border: isHero ? "1px solid rgba(255,255,255,0.38)" : "1px solid #e5e7eb",
         background: isHero ? "rgba(255,255,255,0.18)" : "white",
         backdropFilter: isHero ? "blur(18px)" : "none",
         WebkitBackdropFilter: isHero ? "blur(18px)" : "none",
-        padding: isMobile ? 10 : 18,
+        padding: isMobile ? 8 : 18,
         boxShadow: isHero ? "0 8px 32px rgba(0,0,0,0.15)" : "0 4px 20px rgba(0,0,0,0.1)",
         marginBottom: isHero ? 24 : 0,
         maxWidth: isMobile ? "100%" : "none",
+        boxSizing: "border-box",
       }}>
         <div style={{
           display: "flex",
-          flexDirection: isMobile ? "column" : "row",
-          alignItems: isMobile ? "stretch" : "center",
-          gap: isMobile ? 10 : 12,
+          flexDirection: "row",
+          alignItems: "center",
+          gap: isMobile ? 8 : 12,
         }}>
           <input
             type="text"
-            placeholder="Search by location, property type..."
+            placeholder={isMobile ? "Search location..." : "Search by location, property type..."}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             style={{
               flex: 1,
-              height: isMobile ? 44 : 48,
-              borderRadius: 14,
+              minWidth: 0,
+              boxSizing: "border-box",
+              height: isMobile ? 52 : 48,
+              borderRadius: isMobile ? 12 : 14,
               border: "none",
               outline: "none",
               background: isHero ? "rgba(255,255,255,0.75)" : "#f9fafb",
-              padding: isMobile ? "0 16px" : "0 20px",
+              padding: isMobile ? "0 12px" : "0 20px",
               fontSize: isMobile ? 16 : 15,
               fontWeight: 500,
               color: "#2F3E5A",
@@ -295,17 +300,18 @@ export default function SearchAndFilter({ variant = 'hero', page = 'buy' }: Sear
             onClick={handleSearch}
             style={{
               flexShrink: 0,
-              height: isMobile ? 44 : 48,
-              borderRadius: isMobile ? 14 : 25,
+              height: isMobile ? 52 : 48,
+              borderRadius: isMobile ? 12 : 25,
               border: "none",
               background: "#2F3E5A",
-              padding: isMobile ? "0 24px" : "0 32px",
-              fontSize: isMobile ? 15 : 16,
+              padding: isMobile ? "0 20px" : "0 32px",
+              fontSize: isMobile ? 16 : 16,
               fontWeight: 700,
               color: "#B8C4D4",
               cursor: "pointer",
               transition: "background 0.2s ease",
-              width: isMobile ? "100%" : "auto",
+              width: "auto",
+              boxSizing: "border-box",
             }}
           >
             Search
