@@ -29,6 +29,7 @@ export default function AboutPage() {
           backgroundSize: "cover", backgroundPosition: "center"
         }} />
         <div style={{ 
+          display: isMobile ? "none" : "block",
           position: "absolute", top: isMobile ? -50 : -100, right: isMobile ? -50 : 0, width: isMobile ? 400 : 600, height: isMobile ? 300 : 450, zIndex: 2,
           backgroundImage: `url("${mediaBase}/1761044db791f52557c4a195b48ac7124069cc3132ca8bee8618f4cc7fb90a7b.png")`,
           backgroundSize: "cover", backgroundPosition: "center"
