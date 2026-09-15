@@ -164,7 +164,7 @@ export default function ContactPage() {
                 }}>
                   Get quick responses and support
                 </p>
-                <a href="https://wa.me/2348000000000" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+                <a href="https://wa.me/2349071572848" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
                   <button style={{
                     background: "#AB6430", color: "#fff", fontSize: 9, fontWeight: 600,
                     padding: "4px 16px", borderRadius: 21, border: "none", cursor: "pointer",

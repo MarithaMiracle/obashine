@@ -142,7 +142,7 @@ export default function SellWithUsPage() {
             }}>
               Get started
             </button>
-            <a href="https://wa.me/2348000000000" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+            <a href="https://wa.me/2349071572848" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
               <button style={{
                 background: "#fff", color: "#AB6430", fontSize: 13, fontWeight: 600,
                 padding: "8px 24px", borderRadius: 999, border: "none", cursor: "pointer"
@@ -501,7 +501,7 @@ export default function SellWithUsPage() {
               {loading ? 'Submitting...' : 'Submit Property'}
             </button>
             {/* WhatsApp Contact */}
-            <a href="https://wa.me/2348000000000" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", cursor: "pointer" }}>
+            <a href="https://wa.me/2349071572848" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none", cursor: "pointer" }}>
               <p style={{ textAlign: "center", fontSize: 14, color: "#AB6430", margin: 0, fontFamily: "'Poppins', sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                 Prefer to chat? Contact us directly on
                 <span style={{ fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>

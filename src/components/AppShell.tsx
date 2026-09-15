@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import WhatsAppFloat from '@/components/WhatsAppFloat';
 
 interface AppShellProps {
   children: ReactNode;
@@ -22,6 +23,7 @@ export default function AppShell({ children }: AppShellProps) {
       <Navbar />
       {children}
       <Footer />
+      <WhatsAppFloat />
     </>
   );
 }
